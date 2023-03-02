@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./styles.css" media="screen" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="./main.js"></script>
 </head>
 <body>
     <nav>
@@ -19,17 +20,17 @@
     <main class="container">
         <div class="card">
             <div class="store">
-                <div class="product">
+                <div class="product" x-data="{productQuantity: 0}">
                     <div class="heading"> <!-- <input type="text" class="tag" disabled value="Lorem Ipsum"> -->
                         <button class="settings">
                             <i class="fa-solid fa-ellipsis-vertical"></i>  
                         </button>
                     </div>
                     <div class="product-content">
-                        <h4>76</h4>
+                        <h4 id="product-quantity" x-text="productQuantity"></h4>
                     </div>
                     <div class="product-info">
-                        <input type="text">
+                        <input type="text" x-model="productQuantity">
                     </div>
                 </div>
                 <div class="product"></div>
