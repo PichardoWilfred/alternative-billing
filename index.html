@@ -6,34 +6,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="reset.css" media="screen" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@100;300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css" media="screen" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
     <nav>
         <h4>
-            Aplicación de Gerson
+            App
         </h4>
     </nav>
-    <div class="container">
-
-    </div>
+    <main class="container">
+        <div class="card">
+            <div class="store">
+                <div class="product">
+                    <div class="heading"> <!-- <input type="text" class="tag" disabled value="Lorem Ipsum"> -->
+                        <button class="settings">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>  
+                        </button>
+                    </div>
+                    <div class="product-content">
+                        <h4>76</h4>
+                    </div>
+                    <div class="product-info">
+                        <input type="text">
+                    </div>
+                </div>
+                <div class="product"></div>
+                <div class="product"></div>
+                <div class="product"></div>
+            </div>
+            <div class="form-group"> <!-- validar que sea un numero porque Firefox no deja poner solo texto... -->
+                <input type="number" class="quantity" pattern="[0-9]*" placeholder="Ingrese la cantidad que quiere añadir">
+                <button type="button" class="send">
+                    <i class="fa-solid fa-plus"></i>           
+                </button>
+            </div>
+        </div>
+    </main>
 </body>
 <style>
-    html {
-        font-family: 'Chivo', sans-serif;
+    .heading {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: auto;
+        height: 28px;
     }
-    nav {
-        background-color: #090909;
-        color: white;
+    .product-info {
+        margin-top: 30px;
     }
-    nav h4 {
-        font-size: 38px;
-        padding-block: 22px;
-        padding-left: 22px;
+    .product-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .product-content h4 {
+        font-size: 5rem;
+        font-weight: 600;
+    }
+    .store {
+        display: flex;
+        flex-wrap: wrap;
+        
+        border: 1px solid #c9c9c9;
+        background-color: #efefef;
+        min-height: 5rem;
+        border-radius: 7px;
+        margin-bottom: 0.8rem;
+        overflow: hidden;
+    }
+    button.settings {
+        margin-left: auto;
+        background-color: transparent;    
+        color: #cbcbcb;
+        padding: 0;
+    }
+
+    .store .product {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex-grow: 0;
+        width: calc(50% - 2rem);
+        min-height: 10rem;
+
+        background-color: white;
+        box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+        padding: 1rem;
+    }
+    input.tag {
+        width: 120px;
     }
 </style>
+<script type="module">
+
+</script>
 </html>
 
