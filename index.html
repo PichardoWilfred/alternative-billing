@@ -12,58 +12,63 @@
     <script src="./js/main.js"></script>
 </head>
 <body>
-    <nav>
-        <h4>
-            App
-        </h4>
-    </nav>
-    <main class="container">
-        <div class="card">
-            <div class="store" x-data="store">    
-                <template x-for="(product, index) in  products" :key="index">
-                    <div class="product" :class="(product.id === selectedProduct) && 'selected'" @click="selectProduct(product)" @click.outside="editingProduct = 0" x-transition.opacity  x-cloak>
-                        <div class="product-heading">
-                            <button class="settings" @click="showContextMenu(product.id)">
-                                <i class="fa-solid fa-ellipsis-vertical"></i>
-                            </button>
-                            <div x-show="contextMenu === product.id" class="product-context-menu"
-                                @click.outside="showContextMenu(0)" x-transition.opacity x-cloak>
-                                <ul>
-                                    <li @click="enableEdit(product)">
-                                        <span>
-                                            <i class="fas fa-edit"></i>
-                                            Editar nombre
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span>
-                                            <i class="fa-regular fa-trash-can"></i>
-                                            Eliminar sección
-                                        </span>
-                                    </li>
-                                </ul>
+    <div class="container">
+        <nav>
+            <h4>
+                App
+            </h4>
+        </nav>
+        <main>
+            <div class="card">
+                <div class="store" x-data="store">    
+                    <template x-for="(product, index) in  products" :key="index">
+                        <div class="product" :id="`product-${product.id}`" :class="(product.id === selectedProduct) && 'selected'" @click="selectProduct(product)" @click.outside="editingProduct = 0" x-transition.opacity  x-cloak>
+                            <div class="product-heading">
+                                <button class="settings" @click="showContextMenu(product.id)">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                </button>
+                                <div x-show="contextMenu === product.id" class="product-context-menu"
+                                    @click.outside="showContextMenu(0)" x-transition.opacity x-cloak>
+                                    <ul>
+                                        <li @click="enableEdit(product)">
+                                            <span>
+                                                <i class="fas fa-edit"></i>
+                                                Editar nombre
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span>
+                                                <i class="fa-regular fa-trash-can"></i>
+                                                Eliminar sección
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="product-content">
+                                <h4 id="product-quantity" x-text="product.quantity"></h4>
+                            </div>
+                            <div class="product-info">
+                                <span :contenteditable="product.editing" class="tag" :class="product.editing && 'editing'" 
+                                x-text="product.label" x-ref="product_tag" @keydown.enter="updateLabel(product)" 
+                                :disabled="!product.editing">
+                                </span>
                             </div>
                         </div>
-                        <div class="product-content">
-                            <h4 id="product-quantity" x-text="product.quantity"></h4>
-                        </div>
-                        <div class="product-info">
-                            <input type="text" class="tag" x-model="product.label" @keydown.enter="updateLabel(product)" :disabled="!product.editing">
-                        </div>
-                    </div>
-                </template>
+                    </template>
+                </div>
+                <div class="form-group" x-data> <!-- validar que sea un numero porque Firefox no deja poner solo texto... -->
+                    <button type="button" class="substract" @click="papo()">
+                        <i class="fa-solid fa-minus"></i>           
+                    </button>
+                    <input type="number" class="quantity" pattern="[0-9]*" placeholder="Ingrese la cantidad que quiere añadir o substraer">
+                    <button type="button" class="add" @click="papo()">
+                        <i class="fa-solid fa-plus"></i>           
+                    </button>
+                </div>
             </div>
-            <div class="form-group" x-data> <!-- validar que sea un numero porque Firefox no deja poner solo texto... -->
-                <button type="button" class="substract" @click="papo()">
-                    <i class="fa-solid fa-minus"></i>           
-                </button>
-                <input type="number" class="quantity" pattern="[0-9]*" placeholder="Ingrese la cantidad que quiere añadir o substraer">
-                <button type="button" class="add" @click="papo()">
-                    <i class="fa-solid fa-plus"></i>           
-                </button>
-            </div>
-        </div>
-    </main>
+        </main>
+    </div>
 </body>
 <style>
     .store {
@@ -71,10 +76,13 @@
         align-content: start;
         flex-wrap: wrap;
         
-        border: 1px solid #c9c9c9;
+        border: 2px solid #c9c9c9;
         background-color: #efefef;
         border-radius: 7px;
         margin-bottom: 20px;
+
+        max-height: 100%;
+        overflow-y: scroll;
     }
     .store .product {
         display: flex;
@@ -105,7 +113,6 @@
     }
     .store .product .product-heading .product-context-menu {
         position: absolute;
-        overflow: hidden;
         top: 0;
         right: 0;
         z-index: 3;
@@ -118,7 +125,7 @@
     }
     
     .store .product .product-heading .product-context-menu li{
-        padding: 10px 18px;
+        padding: 10px;
         color: #555;
         cursor: pointer;
     }
@@ -147,22 +154,22 @@
         display: flex;
         justify-content: center;
     }
-    .store .product .product-info input.tag {
+    .store .product .product-info span.tag {
         display: flex;
         border: 0;
-        font-size: 14px;
+        font-size: 18px;
         font-weight: 600;
-        width: min-content;
+
+        min-height: 25px;
         min-width: 30%;
-        max-width: 90%;
 
         border-radius: 3rem;
         padding-block: 4px;
-        padding-right: 12px;
-        padding-left: 24px;
+        padding-inline: 12px;
+        line-height: 0.9;
         background-color: #e8e8e8;
     }
-    input:is(:active, :focus, :focus-visible ).tag {
+    span:is(:active, :focus, :focus-visible ).tag {
         outline: none;
     }
     button.settings {
@@ -179,7 +186,10 @@
         color: #cbcbcb;
         padding: 0;
     }
-    .store .product:hover button.settings {
+    .store .product:is(:active, :focus, :hover) button.settings {
+        display: flex;
+    }
+    .store .product.selected button.settings {
         display: flex;
     }
     button.settings:focus-visible {
