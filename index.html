@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerson APP</title>
+    <title>Gerson app</title>
     <link rel="stylesheet" href="./styles/reset.css" media="screen" />
     <link rel="stylesheet" href="./styles/styles.css" media="screen" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -21,13 +21,13 @@
         <div class="card">
             <div class="store" x-data="store">    
                 <template x-for="(product, index) in  products" :key="index">
-                    <div class="product" :class="(product.id === selectedProduct) && 'selected'" @click="selectProduct(product)" @click.outside="editingProduct = 0">
+                    <div class="product" :class="(product.id === selectedProduct) && 'selected'" @click="selectProduct(product)" @click.outside="editingProduct = 0" x-transition.opacity  x-cloak>
                         <div class="product-heading">
                             <button class="settings" @click="showContextMenu(product.id)">
-                                <i class="fa-solid fa-ellipsis-vertical"></i>  
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
                             </button>
-                            <div x-show="contextMenu === product.id" class="product-context-menu" x-transition.opacity x-cloak
-                                @click.outside="showContextMenu(0)">
+                            <div x-show="contextMenu === product.id" class="product-context-menu"
+                                @click.outside="showContextMenu(0)" x-transition.opacity x-cloak>
                                 <ul>
                                     <li @click="enableEdit(product)">
                                         <span>
@@ -73,16 +73,14 @@
         
         border: 1px solid #c9c9c9;
         background-color: #efefef;
-        min-height: 30rem;
         border-radius: 7px;
-        margin-bottom: 0.8rem;
-        overflow: hidden;
+        margin-bottom: 20px;
     }
     .store .product {
-        position: relative;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        position: relative;
         flex-grow: 1;
         width: calc(50% - 2rem);
 
@@ -92,10 +90,10 @@
     }
     .store .product.selected::after {
         content: '';
+        display: block;
         position: absolute;
         bottom: 0;
         left: 0;
-        display: block;
         width: 100%;
         height: 8px;
         background-color: #090909;
@@ -142,7 +140,7 @@
         justify-content: center;
     }
     .store .product .product-content h4 {
-        font-size: 5rem;
+        font-size: 4rem;
         font-weight: 600;
     }
     .store .product .product-info {
@@ -152,7 +150,7 @@
     .store .product .product-info input.tag {
         display: flex;
         border: 0;
-        font-size: 18px;
+        font-size: 14px;
         font-weight: 600;
         width: min-content;
         min-width: 30%;
@@ -168,7 +166,7 @@
         outline: none;
     }
     button.settings {
-        display: flex;
+        display: none;
         align-items: center;
         justify-content: center;
         position: relative;
@@ -180,6 +178,9 @@
         background-color: transparent;    
         color: #cbcbcb;
         padding: 0;
+    }
+    .store .product:hover button.settings {
+        display: flex;
     }
     button.settings:focus-visible {
         outline: none;

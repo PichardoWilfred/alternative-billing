@@ -1,11 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500&family=Poppins:ital,wght@0,100;0,200;0,300;0,600;0,700;1,400;1,500&display=swap');
-*,html {
+*, html {
     font-family: 'Poppins', sans-serif;
 }
 body {
     background-color: #E6E8EC;
 }
+main.container {
+    height: 100vh;
+    margin-top: 5rem;
+}
 nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
     background-color: #090909;
     color: white;
 }
@@ -15,7 +22,7 @@ nav h4 {
     padding-left: 22px;
 }
 
-:root{
+:root {
     --transition-1: all 0.15s ease-in-out;
 }
 input.quantity {
@@ -82,27 +89,34 @@ button:is(.add, .substract) {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
     width: 100%;
-    height: 70vh;
+    height: 100%;
     padding: 1.5rem;
     margin-inline: auto;
-    
+
     border-radius: 6px;
 
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
-@media (min-width: 576px) {
-    
-    .card {
-        margin-top: 4rem;
-        max-width: 70%;
+@media (min-width: 768px) {
+    .store .product .product-info input.tag {
+        font-size: 22px;
     }
-    
+    .card {
+        margin-top: 7rem;
+
+        max-width: 70%;
+        height: 80%;
+    }
     .store .product {
         height: 200px;
+    }
+    
+    .store .product .product-content h4 {
+        font-size: 5rem;
+        font-weight: 600;
     }
 }
 @media (min-width: 1200px) {

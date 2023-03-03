@@ -29,17 +29,17 @@ document.addEventListener('alpine:init', () => {
                 editing: false,
             },
             {   id: 3,
-                quantity: 125,
+                quantity: 300,
                 label: 'Roberto',
                 editing: false,
             },
             {   id: 4,
-                quantity: 125,
+                quantity: 20,
                 label: 'Roberto',
                 editing: false,
             },
             {   id: 5,
-                quantity: 125,
+                quantity: 07,
                 label: 'Roberto',
                 editing: false,
             },
@@ -48,21 +48,15 @@ document.addEventListener('alpine:init', () => {
             this.products.map((product) => { product.editing = false; })
         },
         selectProduct({id}) {
-            console.log(`selecting: \n${id}`);
-            // this.editingProduct = 0;
+            console.log(`selected: ${id}`);
             if (this.selectedProduct !== id) {
                 this.unSelectAll();
             };
             this.selectedProduct = id;
         },
         showContextMenu(id){
-            // const hide = id === 0;
-            // if (!hide) {
-            //     console.log('wii');
-            // }else {
-            // }
+            console.log(`context on: ${id}`);
             this.contextMenu = id;
-            console.log(`context: \n${this.contextMenu}`);
         },
         enableEdit({id}){
             this.products.map((product) => {
