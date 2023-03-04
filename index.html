@@ -8,8 +8,10 @@
     <link rel="stylesheet" href="./styles/reset.css" media="screen" />
     <link rel="stylesheet" href="./styles/styles.css" media="screen" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://unpkg.com/minibarjs@latest/dist/minibar.min.css" rel="stylesheet" type="text/css">
+    <script src="https://unpkg.com/minibarjs@latest/dist/minibar.min.js" type="text/javascript"></script>
+    <script type="module" src="./js/main.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="./js/main.js"></script>
 </head>
 <body>
     <div class="container">
@@ -18,51 +20,72 @@
                 App
             </h4>
         </nav>
+        <!-- delete modal -->
+        <div class="modal-mask" x-data="store">
+            <div class="modal">
+                <div class="header">
+                    <h4>
+                        Eliminar elemento
+                    </h4>
+                    <button type="button" @click="showDelete(product.id)">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="content">
+                    <p>
+                        Est irure culpa excepteur aute quis do aute qui.
+                    </p>
+                </div>
+                <!-- Esta seguro que quiere eliminar a <span></span> -->
+            </div>
+        </div>
         <main>
             <div class="card">
-                <div class="store" x-data="store">    
-                    <template x-for="(product, index) in  products" :key="index">
-                        <div class="product" :id="`product-${product.id}`" :class="(product.id === selectedProduct) && 'selected'" @click="selectProduct(product)" @click.outside="editingProduct = 0" x-transition.opacity  x-cloak>
-                            <div class="product-heading">
-                                <button class="settings" @click="showContextMenu(product.id)">
-                                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                                </button>
-                                <div x-show="contextMenu === product.id" class="product-context-menu"
-                                    @click.outside="showContextMenu(0)" x-transition.opacity x-cloak>
-                                    <ul>
-                                        <li @click="enableEdit(product)">
-                                            <span>
-                                                <i class="fas fa-edit"></i>
-                                                Editar nombre
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span>
-                                                <i class="fa-regular fa-trash-can"></i>
-                                                Eliminar sección
-                                            </span>
-                                        </li>
-                                    </ul>
+                <div id="scroll-container">
+                    <div class="store" x-data="store">    
+                        <template x-for="(product, index) in  products" :key="index">
+                            <div class="product" :id="`product-${product.id}`" :class="(product.id === selectedProduct) && 'selected'" @click="selectProduct(product)" @click.outside="editingProduct = 0" x-transition.opacity  x-cloak>
+                                <div class="product-heading">
+                                    <button class="settings" @click="showDelete(product.id)">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                    <div x-show="contextMenu === product.id" class="product-context-menu" x-transition.opacity >
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa-regular fa-trash-can"></i>
+                                                    Eliminar sección
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="product-content">
+                                    <h4 id="product-quantity" x-text="product.quantity"></h4>
+                                </div>
+                                <div class="product-info">
+                                    <div x-show="!product.editing" class="dot"></div>
+                                    <span
+                                        onkeypress="return (this.innerText.length <= 15)"
+                                        @click.prevent="enableEdit(product)"
+                                        @click.outside="clickOutside(product)"
+                                        @keydown.enter.prevent="unSelect(product.id)"
+                                        :contenteditable="product.id === selectedProduct" 
+                                        class="tag" :class="product.editing && 'editing'" 
+                                        x-text="product.label"
+                                        :disabled="!product.editing">
+                                    </span>
                                 </div>
                             </div>
-                            <div class="product-content">
-                                <h4 id="product-quantity" x-text="product.quantity"></h4>
-                            </div>
-                            <div class="product-info">
-                                <span :contenteditable="product.editing" class="tag" :class="product.editing && 'editing'" 
-                                x-text="product.label" x-ref="product_tag" @keydown.enter="updateLabel(product)" 
-                                :disabled="!product.editing">
-                                </span>
-                            </div>
-                        </div>
-                    </template>
+                        </template>
+                    </div>
                 </div>
                 <div class="form-group" x-data> <!-- validar que sea un numero porque Firefox no deja poner solo texto... -->
-                    <button type="button" class="substract" @click="papo()">
+                    <button type="button" class="substract">
                         <i class="fa-solid fa-minus"></i>           
                     </button>
                     <input type="number" class="quantity" pattern="[0-9]*" placeholder="Ingrese la cantidad que quiere añadir o substraer">
-                    <button type="button" class="add" @click="papo()">
+                    <button type="button" class="add">
                         <i class="fa-solid fa-plus"></i>           
                     </button>
                 </div>
@@ -70,152 +93,7 @@
         </main>
     </div>
 </body>
-<style>
-    .store {
-        display: flex;
-        align-content: start;
-        flex-wrap: wrap;
-        
-        border: 2px solid #c9c9c9;
-        background-color: #efefef;
-        border-radius: 7px;
-        margin-bottom: 20px;
-
-        max-height: 100%;
-        overflow-y: scroll;
-    }
-    .store .product {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        position: relative;
-        flex-grow: 1;
-        width: calc(50% - 2rem);
-
-        background-color: white;
-        box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
-        padding: 1rem;
-    }
-    .store .product.selected::after {
-        content: '';
-        display: block;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 8px;
-        background-color: #090909;
-        transition: var(--transition-1);
-    }
-    .store .product .product-heading {
-        height: 28px;
-        position: relative;
-    }
-    .store .product .product-heading .product-context-menu {
-        position: absolute;
-        top: 0;
-        right: 0;
-        z-index: 3;
-        background-color: white;
-        border-radius: 8px;
-        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-
-        width: max-content;
-        height: 80px;
-    }
-    
-    .store .product .product-heading .product-context-menu li{
-        padding: 10px;
-        color: #555;
-        cursor: pointer;
-    }
-    .store .product .product-heading .product-context-menu li:hover {
-        background-color: #f2f2f2;
-    }
-    .store .product .product-heading .product-context-menu li:not(:last-child){
-        border-bottom: 1px solid #ddd;
-    }
-    .store .product .product-heading .product-context-menu li span{
-        font-weight: 600;
-    }
-    .store .product .product-heading .product-context-menu li span i{
-        margin-right: 6px;
-    }
-    .store .product .product-content {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .store .product .product-content h4 {
-        font-size: 4rem;
-        font-weight: 600;
-    }
-    .store .product .product-info {
-        display: flex;
-        justify-content: center;
-    }
-    .store .product .product-info span.tag {
-        display: flex;
-        border: 0;
-        font-size: 18px;
-        font-weight: 600;
-
-        min-height: 25px;
-        min-width: 30%;
-
-        border-radius: 3rem;
-        padding-block: 4px;
-        padding-inline: 12px;
-        line-height: 0.9;
-        background-color: #e8e8e8;
-    }
-    span:is(:active, :focus, :focus-visible ).tag {
-        outline: none;
-    }
-    button.settings {
-        display: none;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-
-        width: 10px;
-        height: 40px;
-        font-size: 26px;
-        margin-left: auto;
-        background-color: transparent;    
-        color: #cbcbcb;
-        padding: 0;
-    }
-    .store .product:is(:active, :focus, :hover) button.settings {
-        display: flex;
-    }
-    .store .product.selected button.settings {
-        display: flex;
-    }
-    button.settings:focus-visible {
-        outline: none;
-    }
-    button.settings::before {
-        content: '';
-        border-radius: 4rem;
-        position: absolute;
-        z-index: 2;
-        display: block;
-        width: 40px;
-        height: 40px;
-        transition: var(--transition-1);
-    }
-    
-    button.settings:hover::before {
-        background-color: #f7f7f7;
-    }
-    button.settings i {
-        position: relative;
-        z-index: 3;
-    }
-</style>
-<script type="module">
-    
-</script>
+<style></style>
+<script type="module"></script>
 </html>
 

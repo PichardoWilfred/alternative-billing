@@ -9,6 +9,59 @@ div.container {
     display: flex;
     flex-direction: column;
 }
+.modal-mask {
+    position: fixed;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100vw;
+    height: 100vh;
+    overflow: unset;
+    background-color: #0909098a;
+    z-index: 9;
+}
+.modal-mask .modal {
+    padding: 1rem;
+    background-color: white;
+    min-width: 350px;
+    width: 60%;
+    max-width: 500px;
+    border-radius: 7px;
+}
+.modal-mask .modal .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #090909;
+    font-weight: 700;
+}
+.modal-mask .modal .header h4{
+    margin-top: .5rem;
+    margin-left: .5rem;
+    font-size: 22px;
+}
+.modal-mask .modal .content p{
+    margin-top: .5rem;
+    margin-left: .5rem;
+    font-weight: 500;
+}
+.modal-mask .modal .header button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    background-color: transparent;
+    color: #090909;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 3rem;
+}
+.modal-mask .modal .header button:hover {
+    background-color: #c4c4c4;
+}
 nav {
     position: sticky;
     top: 0;
@@ -53,7 +106,6 @@ input.quantity::placeholder {
     color: #c7c7c7;
     font-weight: 500;
 }
-
 input.quantity:focus {
     outline: none;
     border-color: rgb(150, 150, 150);
@@ -80,6 +132,7 @@ button:active {
     background-color: white;
 }
 button:is(.add, .substract) {
+    flex-grow: 2;
     margin-inline: 8px;
     height: fit-content;
 }
@@ -103,7 +156,198 @@ button:is(.add, .substract) {
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
+.mb-content {
+    padding-left: 0 !important;
+}
+#scroll-container {
+    height: 87%;
+    border: 1px solid #c9c9c9;
+    border-radius: 7px;
+}
+.store {
+    display: flex;
+    align-content: start;
+    flex-wrap: wrap;
+    
+    background-color: #efefef;
+    margin-bottom: 20px;
 
+    max-height: 100%;
+}
+
+.store .product {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    flex-grow: 1;
+
+    width: calc(50% - 2rem);
+    min-height: 180px;
+
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+    padding: 1rem;
+    cursor: pointer;
+}
+.store .product::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background-color: #FFF;
+    transition: var(--transition-1);
+}
+.store .product.selected {
+    animation: select-product ease-out 0.25s;
+}
+@keyframes select-product {
+    from {
+        background-color: #f3f3f3;
+    } 
+    to {
+        background-color: white;
+    }
+}
+.store .product.selected::after {
+    background-color: #090909;
+}
+.store .product .product-heading {
+    height: 28px;
+    position: relative;
+}
+.store .product .product-heading .product-context-menu {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 3;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+
+    width: max-content;
+    height: 35px;
+}
+
+.store .product .product-heading .product-context-menu li{
+    padding: 10px;
+    color: #555;
+    cursor: pointer;
+}
+.store .product .product-heading .product-context-menu li:hover {
+    background-color: #f2f2f2;
+}
+.store .product .product-heading .product-context-menu li:not(:last-child){
+    border-bottom: 1px solid #ddd;
+}
+.store .product .product-heading .product-context-menu li span{
+    font-weight: 600;
+}
+.store .product .product-heading .product-context-menu li span i{
+    margin-right: 6px;
+}
+.store .product .product-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.store .product .product-content h4 {
+    font-size: 4rem;
+    font-weight: 600;
+}
+.store .product .product-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.store .product .product-info span.tag {
+    border: 0;
+    border-radius: 3rem;
+
+    font-size: 20px;
+    font-weight: 600;
+
+    min-height: 25px;
+    line-height: 1;
+    min-width: 20%;
+    width: max-content;
+    max-width: 208px;
+
+    padding-block: 4px;
+    padding-inline: 12px;
+    background-color: #e8e8e8;
+    color: #383838;
+    
+    overflow: hidden;
+    white-space: nowrap;
+
+    transition: var(--transition-1);
+}
+.store .product .product-info .dot {
+    flex-shrink: 0;
+    background-color: #090909;
+    height: 8px;
+    width: 8px;
+    margin-right: 6px;
+    border-radius: 3rem;
+}
+.store .product .product-info span.editing.tag {
+    color: #090909;
+}
+
+span:is(:active, :focus, :focus-visible ).tag {
+    outline: none;
+}
+button.settings {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    width: 10px;
+    height: 40px;
+
+    font-size: 26px;
+    margin-left: auto;
+    background-color: transparent;    
+    color: #cbcbcb;
+    padding: 0;
+    transform: translate(0px, -10px);
+}
+.store .product.selected button.settings {
+    display: flex;
+}
+button.settings:focus-visible {
+    outline: none;
+}
+button.settings::before {
+    content: '';
+    border-radius: 4rem;
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 40px;
+    height: 40px;
+    transition: var(--transition-1);
+}
+
+button.settings:hover::before {
+    background-color: #f7f7f7;
+}
+button.settings i {
+    position: relative;
+    z-index: 3;
+}
+
+@media (max-width: 576px) {
+    
+    .store .product .product-info span.tag {
+        /* min-width: calc(30% + 60px); */
+    }
+}
 @media (min-width: 768px) {
     .store .product .product-info span.tag {
         font-size: 22px;
@@ -112,7 +356,7 @@ button:is(.add, .substract) {
         margin-top: 7rem;
 
         max-width: 70%;
-        height: 780px;
+        height: 750px;
     }
     .store .product {
         height: 200px;
