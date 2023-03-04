@@ -1,4 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500&family=Poppins:ital,wght@0,100;0,200;0,300;0,600;0,700;1,400;1,500&display=swap');
+/* Alpine */
+
+[x-cloak] {
+    display: none !important;
+}
 *, html {
     font-family: 'Poppins', sans-serif;
 }
@@ -9,45 +14,48 @@ div.container {
     display: flex;
     flex-direction: column;
 }
-.modal-mask {
+.modal-container {
     position: fixed;
-
     display: flex;
+
     justify-content: center;
     align-items: center;
 
     width: 100vw;
     height: 100vh;
     overflow: unset;
-    background-color: #0909098a;
     z-index: 9;
 }
-.modal-mask .modal {
+.modal-container .modal-body {
     padding: 1rem;
     background-color: white;
     min-width: 350px;
     width: 60%;
     max-width: 500px;
     border-radius: 7px;
+    z-index: 3;
 }
-.modal-mask .modal .header {
+.modal-container .modal-mask {
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    background-color: #0909098a;
+}
+.modal-container .modal-body .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     color: #090909;
     font-weight: 700;
 }
-.modal-mask .modal .header h4{
+.modal-container .modal-body .header h4 {
     margin-top: .5rem;
     margin-left: .5rem;
     font-size: 22px;
 }
-.modal-mask .modal .content p{
-    margin-top: .5rem;
-    margin-left: .5rem;
-    font-weight: 500;
-}
-.modal-mask .modal .header button {
+.modal-container .modal-body .header button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -59,9 +67,39 @@ div.container {
     height: 30px;
     border-radius: 3rem;
 }
-.modal-mask .modal .header button:hover {
-    background-color: #c4c4c4;
+.modal-container .modal-body .header button.close:hover {
+    background-color: #f1f0f0;
 }
+.modal-container .modal-body .content p {
+    margin-top: .5rem;
+    margin-left: .5rem;
+    margin-bottom: 20px;
+    font-weight: 500;    
+    line-height: 1.3;
+}
+.modal-container .modal-body .content b {
+    font-weight: 600;   
+}
+.modal-container .modal-body .footer {
+    display: flex;
+    justify-content: end;
+}
+.modal-container .modal-body .footer button {
+    font-weight: 600;
+    font-size: 14px;
+}
+.modal-container .modal-body .footer button.cancel-modal{
+    border: 2px solid #090909;
+    background-color: white;
+    color: #090909;
+    margin-right: 12px;
+    transition: var(--transition-1);
+}
+.modal-container .modal-body .footer button.cancel-modal:active {
+    background-color: rgb(231 231 231);
+}
+
+/* Body */
 nav {
     position: sticky;
     top: 0;
@@ -283,6 +321,7 @@ button:is(.add, .substract) {
     
     overflow: hidden;
     white-space: nowrap;
+    text-overflow: ellipsis;
 
     transition: var(--transition-1);
 }

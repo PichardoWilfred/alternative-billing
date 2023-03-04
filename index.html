@@ -14,39 +14,46 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
-    <div class="container">
+    <div class="container" x-data="store">
         <nav>
             <h4>
                 App
             </h4>
         </nav>
         <!-- delete modal -->
-        <div class="modal-mask" x-data="store">
-            <div class="modal">
+        <div x-show="modal" class="modal-container">
+            <div class="modal-body">
                 <div class="header">
                     <h4>
                         Eliminar elemento
                     </h4>
-                    <button type="button" @click="showDelete(product.id)">
+                    <button type="button" class="close" @click="modal = false">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
                 <div class="content">
                     <p>
-                        Est irure culpa excepteur aute quis do aute qui.
+                        ¿Está seguro de que desea eliminar el producto <b x-text="selectedProduct.label"></b> ?
                     </p>
                 </div>
-                <!-- Esta seguro que quiere eliminar a <span></span> -->
+                <div class="footer">
+                    <button type="button" class="cancel-modal" @click="modal = false">
+                        Cancelar
+                    </button>
+                    <button type="button" class="accept">Aceptar</button>
+                </div>
             </div>
+            <!-- -->
+            <div class="modal-mask" @click="modal = false"></div>
         </div>
         <main>
             <div class="card">
                 <div id="scroll-container">
-                    <div class="store" x-data="store">    
-                        <template x-for="(product, index) in  products" :key="index">
-                            <div class="product" :id="`product-${product.id}`" :class="(product.id === selectedProduct) && 'selected'" @click="selectProduct(product)" @click.outside="editingProduct = 0" x-transition.opacity  x-cloak>
+                    <div class="store">    
+                        <template x-for="(product, index) in products" :key="index">
+                            <div class="product" :id="`product-${product.id}`" :class="(product.id === selectedProduct.id) && 'selected'" @click="selectProduct(product)" @click.outside="editingProduct = 0" x-transition.opacity  x-cloak>
                                 <div class="product-heading">
-                                    <button class="settings" @click="showDelete(product.id)">
+                                    <button class="settings" @click="() => {showDelete(product.id)}">
                                         <i class="fa-solid fa-xmark"></i>
                                     </button>
                                     <div x-show="contextMenu === product.id" class="product-context-menu" x-transition.opacity >
@@ -64,13 +71,13 @@
                                     <h4 id="product-quantity" x-text="product.quantity"></h4>
                                 </div>
                                 <div class="product-info">
-                                    <div x-show="!product.editing" class="dot"></div>
+                                    <div x-show="!product.editing" class="dot" x-transition.opacity></div>
                                     <span
-                                        onkeypress="return (this.innerText.length <= 15)"
+                                        onkeypress="return (this.innerText.length <= 8)"
                                         @click.prevent="enableEdit(product)"
-                                        @click.outside="clickOutside(product)"
-                                        @keydown.enter.prevent="unSelect(product.id)"
-                                        :contenteditable="product.id === selectedProduct" 
+                                        @click.outside="clickOutside(product, $el.textContent)"
+                                        @keydown.enter.prevent="enterPressed(product, $el.textContent)"
+                                        :contenteditable="product.id === selectedProduct.id" 
                                         class="tag" :class="product.editing && 'editing'" 
                                         x-text="product.label"
                                         :disabled="!product.editing">
@@ -80,12 +87,12 @@
                         </template>
                     </div>
                 </div>
-                <div class="form-group" x-data> <!-- validar que sea un numero porque Firefox no deja poner solo texto... -->
+                <div class="form-group"> <!-- validar que sea un numero porque Firefox no deja poner solo texto... -->
                     <button type="button" class="substract">
                         <i class="fa-solid fa-minus"></i>           
                     </button>
                     <input type="number" class="quantity" pattern="[0-9]*" placeholder="Ingrese la cantidad que quiere añadir o substraer">
-                    <button type="button" class="add">
+                    <button type="button" class="add" >
                         <i class="fa-solid fa-plus"></i>           
                     </button>
                 </div>
