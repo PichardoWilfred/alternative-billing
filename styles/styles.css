@@ -24,7 +24,7 @@ div.container {
     width: 100vw;
     height: 100vh;
     overflow: unset;
-    z-index: 9;
+    z-index: 9999;
 }
 .modal-container .modal-body {
     padding: 1rem;
