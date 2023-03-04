@@ -16,9 +16,11 @@
 <body>
     <div class="container" x-data="store">
         <nav>
-            <h4>
-                App
-            </h4>
+            <img src="./assets/logo.png" alt="">
+            <button @click="addProduct()">
+                <i class="fa-solid fa-plus"></i>
+                Añadir contador
+            </button>
         </nav>
         <!-- delete modal -->
         <div x-show="modal" class="modal-container">
@@ -33,14 +35,14 @@
                 </div>
                 <div class="content">
                     <p>
-                        ¿Está seguro de que desea eliminar el producto <b x-text="selectedProduct.label"></b> ?
+                        ¿Está seguro de que desea eliminar el contador <b x-text="selectedProduct.label"></b> ?
                     </p>
                 </div>
                 <div class="footer">
                     <button type="button" class="cancel-modal" @click="modal = false">
                         Cancelar
                     </button>
-                    <button type="button" class="accept">Aceptar</button>
+                    <button type="button" class="accept" @click="deleteProduct(selectedProduct.id)">Aceptar</button>
                 </div>
             </div>
             <!-- -->
@@ -48,7 +50,7 @@
         </div>
         <main>
             <div class="card">
-                <div id="scroll-container">
+                <div id="scroll-container" :class="!products.length && 'not-found'">
                     <div class="store">    
                         <template x-for="(product, index) in products" :key="index">
                             <div class="product" :id="`product-${product.id}`" :class="(product.id === selectedProduct.id) && 'selected'" @click="selectProduct(product)" @click.outside="editingProduct = 0" x-transition.opacity  x-cloak>
@@ -86,13 +88,28 @@
                             </div>
                         </template>
                     </div>
+                    <template x-if="!products.length">
+                        <div class="not-found">
+                            <span>
+                                :(
+                            </span>
+                            <h4>
+                                Lo sentimos, no encontramos ningún contador en esta sesión. 
+                            </h4>
+                        </div>
+                    </template>
                 </div>
                 <div class="form-group"> <!-- validar que sea un numero porque Firefox no deja poner solo texto... -->
-                    <button type="button" class="substract">
+                    <button type="button" class="substract" @click="editQuantity('substract')">
                         <i class="fa-solid fa-minus"></i>           
                     </button>
-                    <input type="number" class="quantity" pattern="[0-9]*" placeholder="Ingrese la cantidad que quiere añadir o substraer">
-                    <button type="button" class="add" >
+                    <input 
+                    x-model.number="inputQuantity" 
+                    @keydown.enter.prevent="editQuantity('add')"
+                    type="number"
+                    class="quantity" :class="invalidQuantity && 'invalid'"
+                    pattern="[0-9]*" placeholder="Ingrese la cantidad que quiere añadir o substraer">
+                    <button type="button" class="add" @click="editQuantity('add')">
                         <i class="fa-solid fa-plus"></i>           
                     </button>
                 </div>
