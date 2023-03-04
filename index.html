@@ -45,7 +45,6 @@
                     <button type="button" class="accept" @click="deleteProduct(selectedProduct.id)">Aceptar</button>
                 </div>
             </div>
-            <!-- -->
             <div class="modal-mask" @click="modal = false"></div>
         </div>
         <main>
@@ -70,7 +69,7 @@
                                     </div>
                                 </div>
                                 <div class="product-content">
-                                    <h4 id="product-quantity" x-text="product.quantity"></h4>
+                                    <h4 id="product-quantity" x-text="product.quantity" :style="{fontSize: getFontSize(product, $el)}"></h4>
                                 </div>
                                 <div class="product-info">
                                     <div x-show="!product.editing" class="dot" x-transition.opacity></div>

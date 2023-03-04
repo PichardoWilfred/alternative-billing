@@ -21,6 +21,9 @@ new MiniBar(document.querySelector('#scroll-container'));
 
 document.addEventListener('alpine:init', () => {
     Alpine.data('store', () => ({
+        timeout: {
+            productWidth: 0,
+        },
         init() {
             // 
             this.products.map((product_, index) => {
@@ -114,6 +117,18 @@ document.addEventListener('alpine:init', () => {
         enterPressed({ id, label }, label_){
             this.unSelect(id)
             this.updateLabel({id, label},label_)
+        },
+        getFontSize({id, quantity}, element){
+            // clearTimeout(this.timeout.productWidth);
+            let fontSize;
+            const quantity_ = Math.abs(quantity);
+            const digit_count = (quantity_+'').length;
+            // this.timeout.productWidth = setTimeout(() => {
+            //     const div = document.querySelector('#product-'+id)
+            //     fontSize = div.clientWidth * 0.3 + 'px';
+            //     console.log(fontSize);
+            //     return fontSize;
+            // }, 0);
         },
         inputQuantity: 0,
         invalidQuantity: false,

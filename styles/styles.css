@@ -330,7 +330,7 @@ button:is(.add, .substract) {
     justify-content: center;
 }
 .store .product .product-content h4 {
-    font-size: 4rem;
+    font-size: 2.5rem;
     font-weight: 600;
 }
 .store .product .product-info {
