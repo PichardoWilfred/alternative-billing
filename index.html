@@ -102,12 +102,12 @@
                     <button type="button" class="substract" @click="editQuantity('substract')">
                         <i class="fa-solid fa-minus"></i>           
                     </button>
-                    <input 
-                    x-model.number="inputQuantity" 
-                    @keydown.enter.prevent="editQuantity('add')"
-                    type="number"
-                    class="quantity" :class="invalidQuantity && 'invalid'"
-                    pattern="[0-9]*" placeholder="Ingrese la cantidad que quiere añadir o substraer">
+                    <input
+                        x-model.number="inputQuantity" 
+                        @keydown.enter.prevent="editQuantity('add')"
+                        type="number"
+                        class="quantity" :class="invalidQuantity && 'invalid'"
+                        pattern="[0-9]*" placeholder="Ingrese la cantidad que quiere añadir o substraer">
                     <button type="button" class="add" @click="editQuantity('add')">
                         <i class="fa-solid fa-plus"></i>           
                     </button>

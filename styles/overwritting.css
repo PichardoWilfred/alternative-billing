@@ -1,0 +1,19 @@
+.not-found .mb-content {
+    display: flex !important;
+    align-items: center !important;
+    padding-right: 0 !important;
+}
+.mb-content {
+    padding-left: 0 !important;
+    /* padding-right: 0 !important; */
+}
+@media (min-width: 576px) {
+    
+.mb-content {
+    padding-right: 0 !important;
+}
+}
+/* test */
+h4#product-quantity {
+    /* color:red !important; */
+}

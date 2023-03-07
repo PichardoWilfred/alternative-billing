@@ -1,9 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500&family=Poppins:ital,wght@0,100;0,200;0,300;0,600;0,700;1,400;1,500&display=swap');
+@import './overwritting.css';
 /* Alpine */
-
 [x-cloak] {
     display: none !important;
 }
+/* regular styles */
 *, html {
     font-family: 'Poppins', sans-serif;
 }
@@ -24,7 +25,7 @@ div.container {
     width: 100vw;
     height: 100vh;
     overflow: unset;
-    z-index: 9999;
+    z-index: 12;
 }
 .modal-container .modal-body {
     padding: 1rem;
@@ -139,7 +140,15 @@ main {
 :root {
     --transition-1: all 0.15s ease-in-out;
 }
+
+.form-group {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
 input.quantity {
+    width: 80%;
+    font-size: 22px !important;
     border: 1px solid rgb(206, 206, 206);
     border-radius: 4px;
     color: #1d1d1d;
@@ -149,8 +158,6 @@ input.quantity {
     font-size: 14px;
     font-weight: 600;
     font-family: 'Poppins', sans-serif;
-
-    flex-grow: 1;
 
     transition: all 0.12s ease-in-out;
 }
@@ -197,14 +204,9 @@ button:active {
     background-color: white;
 }
 button:is(.add, .substract) {
-    flex-grow: 2;
+    width: 20%;
+    height: 100%;
     margin-inline: 8px;
-    height: fit-content;
-}
-
-.form-group {
-    display: flex;
-    justify-content: center;
 }
 
 .card {
@@ -221,19 +223,13 @@ button:is(.add, .substract) {
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
-.mb-content {
-    padding-left: 0 !important;
-}
 #scroll-container.not-found {
     display: flex;
     align-items: center;
     justify-content: center;
 } 
-.not-found .mb-content {
-    display: flex;
-    align-items: center;
-    padding-left: 0 !important;
-}
+
+
 #scroll-container {
     height: 87%;
     border: 1px solid #c9c9c9;
@@ -436,6 +432,7 @@ button.settings i {
 }
 
 @media (max-width: 576px) {
+
 }
 @media (min-width: 768px) {
     .store .product .product-info span.tag {
