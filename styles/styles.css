@@ -431,9 +431,6 @@ button.settings i {
     line-height: 1.2;
 }
 
-@media (max-width: 576px) {
-
-}
 @media (min-width: 768px) {
     .store .product .product-info span.tag {
         font-size: 22px;
