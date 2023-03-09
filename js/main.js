@@ -1,6 +1,6 @@
 // add a redo funcitonality
 // ádd the null systems logo on the nav.
-const default_products = [ //default values
+const default_tables = [ //default values
     {   id: 1,
         quantity: 0,
         label: '#1',
@@ -12,101 +12,99 @@ const default_products = [ //default values
         editing: false,
     },
 ]
-const products = JSON.parse(localStorage.getItem('products')) || default_products;
+const tables = JSON.parse(localStorage.getItem('tables')) || default_tables;
 
 new MiniBar(document.querySelector('#scroll-container'));
 
-// localStorage.setItem("products", JSON.stringify(products));
-// users = JSON.parse(localStorage.getItem("products") || "[]");
 
 document.addEventListener('alpine:init', () => {
     Alpine.data('store', () => ({
         timeout: {
-            productWidth: 0,
+            // productWidth: 0,
         },
         init() {
             // 
-            this.products.map((product_, index) => {
+            this.tables.map((table_, index) => {
                 if (index === 0) {
-                    this.selectedProduct.id = product_.id
+                    this.selectedTable.id = table_.id
                 }
-                if (this.selectedProduct.id === product_.id) {
-                    this.selectedProduct.label = product_.label
+                if (this.selectedTable.id === table_.id) {
+                    this.selectedTable.label = table_.label
                 }
             });
         },
         modal: false,
-        deleteProduct(id){
-            this.products.forEach((product_, index) => {
-                if (id === product_.id) {
-                    this.products.splice(index, 1);
-                    if (!this.products.length) return; 
-                    // find if there is a product after / before
-                    const { id, label } = this.products[index] || this.products[index - 1] 
-                    this.selectProduct({id, label})
+        deleteTable(id){
+            this.tables.forEach((table_, index) => {
+                if (id === table_.id) {
+                    this.tables.splice(index, 1);
+                    if (!this.tables.length) return; 
+                    // find if there is a table after / before
+                    const { id, label } = this.tables[index] || this.tables[index - 1] 
+                    this.selectTable({id, label})
                 }
             });
             this.modal = false;
-            this.updateLocalStorage('products', this.products, {serialize: true});
+            this.updateLocalStorage('tables', this.tables, {serialize: true});
         },
-        addProduct(){
+        addTable(){
             let id
-            if (!this.products.length) {
+            if (!this.tables.length) {
                 id = 1;
-                this.selectProduct({id, label: '#' +  id})
+                this.selectTable({id, label: '#' +  id})
             }else {
-                if (this.products[this.products.length + 1]) {
-                    id = this.products[this.products.length + 1].id + 1
+                if (this.tables[this.tables.length + 1]) {
+                    id = this.tables[this.tables.length + 1].id + 1
                 }else {
-                    id = this.products[this.products.length - 1].id + 1
+                    id = this.tables[this.tables.length - 1].id + 1
                 }
             }
-            this.products.push({
+            this.tables.push({
                 id,
                 quantity: 0,
                 label: '#' +  id,
                 editing: false,
             });
-            this.updateLocalStorage('products', this.products, {serialize: true});
+            this.updateLocalStorage('tables', this.tables, {serialize: true});
         },
         modalSelected: 'papo',
-        // everytime that we select a different product its editing value will be set to false, (watcher)
+        // everytime that we select a different table its editing value will be set to false, (watcher)
         contextMenu: 0,
-        selectedProduct: {id: 0, label: '', quantity: 0},
-        products: [...products],
+        selectedTable: {id: 0, label: '', quantity: 0},
+        tables: [...tables],
         unSelect(id){
-            this.products.map((product) => { if(product.id === id) product.editing = false; })
+            this.tables.map((table) => { if(table.id === id) table.editing = false; })
         },
-        selectProduct({ id, label }) {
-            if (this.selectedProduct.id !== id) this.unSelect(id);
+        selectTable({ id, label }) {
+            if (this.selectedTable.id !== id) this.unSelect(id);
             // clean the rest
-            this.products.map((product) => {
-                if (this.selectedProduct.id !== id) product.editing = false
+            this.tables.map((table) => {
+                if (this.selectedTable.id !== id) table.editing = false
             })
-            this.selectedProduct.id = id;
-            this.selectedProduct.label = label;
+            this.selectedTable.id = id;
+            this.selectedTable.label = label;
         },
         showDelete(id){ //change the contextMenu only if its different or if we set it to 0.
             this.modal = true;
         },
         updateLabel({ id, label}, label_){
             const new_label = label_.replace(/\s+/g, ' ').trim();
-            this.selectedProduct.label = new_label || label;
-            // rewriting thew products array
-            this.products.map((product) => { if(product.id === id) product.label = new_label; })
-            this.updateLocalStorage('products', this.products, {serialize: true});
+            this.selectedTable.label = new_label || label;
+            // rewriting thew tables array
+            this.tables.map((table) => { if(table.id === id) table.label = new_label; })
+            this.updateLocalStorage('tables', this.tables, {serialize: true});
         },
         enableEdit({ id }){
-            this.products.map((product) => {
-                if (id == product.id) product.editing = true;
+            this.tables.map((table) => {
+                if (id == table.id) table.editing = true;
             });
         },
         clickOutside({ id, label }, label_) {
             // handle if its outside the .store
-            if (id !== this.selectedProduct.id) return;
-            if (id !== this.selectedProduct.id) return;
+            if (id !== this.selectedTable.id) return;
+            if (id !== this.selectedTable.id) return;
             let editing;
-            this.products.map((product) => { if(product.id === id) editing = product.editing })
+            this.tables.map((table) => { if(table.id === id) editing = table.editing })
 
             this.unSelect(id);
             if (editing) { 
@@ -117,18 +115,6 @@ document.addEventListener('alpine:init', () => {
         enterPressed({ id, label }, label_){
             this.unSelect(id)
             this.updateLabel({id, label},label_)
-        },
-        getFontSize({id, quantity}, element){
-            // clearTimeout(this.timeout.productWidth);
-            let fontSize;
-            const quantity_ = Math.abs(quantity);
-            const digit_count = (quantity_+'').length;
-            // this.timeout.productWidth = setTimeout(() => {
-            //     const div = document.querySelector('#product-'+id)
-            //     fontSize = div.clientWidth * 0.3 + 'px';
-            //     console.log(fontSize);
-            //     return fontSize;
-            // }, 0);
         },
         inputQuantity: 0,
         invalidQuantity: false,
@@ -146,7 +132,7 @@ document.addEventListener('alpine:init', () => {
             
             this.invalidQuantity = false;
             const new_quantity = Math.ceil(this.inputQuantity);
-            // console.log(`${action}ing: ${new_quantity} to: ${this.selectedProduct.id} - ${this.selectedProduct.label}`);
+            // console.log(`${action}ing: ${new_quantity} to: ${this.selectedTable.id} - ${this.selectedTable.label}`);
 
             let multiple = 0;
             switch (action) {
@@ -161,12 +147,12 @@ document.addEventListener('alpine:init', () => {
                     break;
             }
             // console.log(multiple);
-            this.products.map((product) => {
-                if (product.id === this.selectedProduct.id) {
-                    product.quantity = product.quantity + (new_quantity * multiple)
+            this.tables.map((table) => {
+                if (table.id === this.selectedTable.id) {
+                    table.quantity = table.quantity + (new_quantity * multiple)
                 }
             });
-            this.updateLocalStorage('products', this.products, {serialize: true});
+            this.updateLocalStorage('tables', this.tables, {serialize: true});
             this.inputQuantity = 0;
             // get the input data
             // clean the input

@@ -15,11 +15,11 @@
 </head>
 <body>
     <div class="container" x-data="store">
-        <nav class="main">
+        <nav>
             <img src="./assets/logo.png" alt="">
-            <button @click="addTable()">
+            <button @click="addProduct()">
                 <i class="fa-solid fa-plus"></i>
-                Añadir tabla
+                Añadir contador
             </button>
         </nav>
         <!-- delete modal -->
@@ -35,36 +35,29 @@
                 </div>
                 <div class="content">
                     <p>
-                        ¿Está seguro de que desea eliminar el contador <b x-text="selectedTable.label"></b> ?
+                        ¿Está seguro de que desea eliminar el contador <b x-text="selectedProduct.label"></b> ?
                     </p>
                 </div>
                 <div class="footer">
                     <button type="button" class="cancel-modal" @click="modal = false">
                         Cancelar
                     </button>
-                    <button type="button" class="accept" @click="deleteTable(selectedTable.id)">Aceptar</button>
+                    <button type="button" class="accept" @click="deleteProduct(selectedProduct.id)">Aceptar</button>
                 </div>
             </div>
             <div class="modal-mask" @click="modal = false"></div>
         </div>
         <main>
-            <header>
-                <ul class="table-list">
-                    <template x-for="(table, index) in tables" :key="table.id">
-                        <li x-text="table.label" :class="table.id === selectedTable.id && 'selected'"></li>
-                    </template>
-                </ul>
-            </header>
             <div class="card">
-                <div id="scroll-container" :class="!tables.length && 'not-found'">
+                <div id="scroll-container" :class="!products.length && 'not-found'">
                     <div class="store">    
-                        <template x-for="(table, index) in tables" :key="index">
-                            <div class="table" :id="`table-${table.id}`" :class="(table.id === selectedTable.id) && 'selected'" @click="selectTable(table)" x-transition.opacity  x-cloak>
-                                <div class="table-heading">
-                                    <button class="settings" @click="() => {showDelete(table.id)}">
+                        <template x-for="(product, index) in products" :key="index">
+                            <div class="product" :id="`product-${product.id}`" :class="(product.id === selectedProduct.id) && 'selected'" @click="selectProduct(product)" @click.outside="editingProduct = 0" x-transition.opacity  x-cloak>
+                                <div class="product-heading">
+                                    <button class="settings" @click="() => {showDelete(product.id)}">
                                         <i class="fa-solid fa-xmark"></i>
                                     </button>
-                                    <div x-show="contextMenu === table.id" class="table-context-menu" x-transition.opacity >
+                                    <div x-show="contextMenu === product.id" class="product-context-menu" x-transition.opacity >
                                         <ul>
                                             <li>
                                                 <span>
@@ -75,32 +68,32 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="table-content">
-                                    <h4 id="table-quantity" x-text="table.quantity" ></h4>
+                                <div class="product-content">
+                                    <h4 id="product-quantity" x-text="product.quantity" :style="{fontSize: getFontSize(product, $el)}"></h4>
                                 </div>
-                                <div class="table-info">
-                                    <div x-show="!table.editing" class="dot" x-transition.opacity></div>
+                                <div class="product-info">
+                                    <div x-show="!product.editing" class="dot" x-transition.opacity></div>
                                     <span
                                         onkeypress="return (this.innerText.length <= 8)"
-                                        @click.prevent="enableEdit(table)"
-                                        @click.outside="clickOutside(table, $el.textContent)"
-                                        @keydown.enter.prevent="enterPressed(table, $el.textContent)"
-                                        :contenteditable="table.id === selectedTable.id" 
-                                        class="tag" :class="table.editing && 'editing'" 
-                                        x-text="table.label"
-                                        :disabled="!table.editing">
+                                        @click.prevent="enableEdit(product)"
+                                        @click.outside="clickOutside(product, $el.textContent)"
+                                        @keydown.enter.prevent="enterPressed(product, $el.textContent)"
+                                        :contenteditable="product.id === selectedProduct.id" 
+                                        class="tag" :class="product.editing && 'editing'" 
+                                        x-text="product.label"
+                                        :disabled="!product.editing">
                                     </span>
                                 </div>
                             </div>
                         </template>
                     </div>
-                    <template x-if="!tables.length">
+                    <template x-if="!products.length">
                         <div class="not-found">
                             <span>
                                 :(
                             </span>
                             <h4>
-                                Lo sentimos, no encontramos ninguna tabla en esta sesión. 
+                                Lo sentimos, no encontramos ningún contador en esta sesión. 
                             </h4>
                         </div>
                     </template>

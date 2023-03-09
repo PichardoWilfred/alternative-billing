@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500&family=Poppins:ital,wght@0,100;0,200;0,300;0,600;0,700;1,400;1,500&display=swap');
 @import './overwritting.css';
+@import './commons.css';
+
 /* Alpine */
 [x-cloak] {
     display: none !important;
@@ -14,6 +16,7 @@ body {
 div.container {
     display: flex;
     flex-direction: column;
+    height: 100vh;
 }
 .modal-container {
     position: fixed;
@@ -101,10 +104,12 @@ div.container {
 }
 
 /* Body */
-nav {
+nav.main {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    max-height: 71px;
+    flex-grow: 2;
     padding: 12px 12px;
     position: sticky;
     top: 0;
@@ -113,15 +118,15 @@ nav {
     color: white;
     z-index: 9;
 }
-nav img {
+nav.main img {
     width: 28px;
     height: 28px;
 }
-nav h4 {
+nav.main h4 {
     font-size: 38px;
     padding-block: 22px;
 }
-nav button {
+nav.main button {
     display: flex;
     align-items: center;
     font-size: 15px;
@@ -129,12 +134,12 @@ nav button {
     height: min-content;
     padding: 12px;
 }
-nav button i {
+nav.main button i {
     font-size: 18px;
     margin-right: 12px;
 }
 main {
-    flex-grow: 1;
+    flex-grow: 3;
 }
 
 :root {
@@ -144,6 +149,7 @@ main {
 .form-group {
     display: flex;
     justify-content: space-between;
+    margin-top: 18px;
     width: 100%;
 }
 input.quantity {
@@ -182,31 +188,31 @@ input.quantity:focus {
     outline: none;
     border-color: rgb(150, 150, 150);
 }
-button {
-    border-radius: 4px;
 
-    color: white;
-    background-color: #1d1d1d;
-    
-    padding: 5px 18px;
-    font-size: 18px;
-
+header ul.table-list{
+    display: flex;
+    border: 1px solid #D9D9D9;
+}
+header ul.table-list li {
+    display: flex;
+    padding: 6px 12px;
+    margin-left: 12px;
+    margin-right: 8px;
     cursor: pointer;
-
-    border: 0;
-    transition: all 0.12s ease-in-out;
 }
-button:hover {
-    background-color: #353535;
+header ul.table-list li.selected {
+    position: relative;
+    font-weight: 800;
 }
-button:active {
-    color: #1d1d1d;
-    background-color: white;
-}
-button:is(.add, .substract) {
-    width: 20%;
-    height: 100%;
-    margin-inline: 8px;
+header ul.table-list li.selected::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: block;
+    height: 2px;
+    background-color: #090909;
+    width: 100%;
 }
 
 .card {
@@ -214,7 +220,8 @@ button:is(.add, .substract) {
     flex-direction: column;
     justify-content: space-between;
     width: 100%;
-    height: calc(100vh - 82px);
+    /* height: calc(100% - 40px); */
+    /* margin-top: 40px; */
     padding: 1.5rem;
     margin-inline: auto;
 
@@ -246,7 +253,7 @@ button:is(.add, .substract) {
     max-height: 100%;
 }
 
-.store .product {
+.store .table {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -261,7 +268,7 @@ button:is(.add, .substract) {
     padding: 1rem;
     cursor: pointer;
 }
-.store .product::after {
+.store .table::after {
     content: '';
     display: block;
     position: absolute;
@@ -272,10 +279,10 @@ button:is(.add, .substract) {
     background-color: #FFF;
     transition: var(--transition-1);
 }
-.store .product.selected {
-    animation: select-product ease-out 0.25s;
+.store .table.selected {
+    animation: select-table ease-out 0.25s;
 }
-@keyframes select-product {
+@keyframes select-table {
     from {
         background-color: #f3f3f3;
     } 
@@ -283,14 +290,14 @@ button:is(.add, .substract) {
         background-color: white;
     }
 }
-.store .product.selected::after {
+.store .table.selected::after {
     background-color: #090909;
 }
-.store .product .product-heading {
+.store .table .table-heading {
     height: 28px;
     position: relative;
 }
-.store .product .product-heading .product-context-menu {
+.store .table .table-heading .table-context-menu {
     position: absolute;
     top: 0;
     right: 0;
@@ -303,38 +310,38 @@ button:is(.add, .substract) {
     height: 35px;
 }
 
-.store .product .product-heading .product-context-menu li{
+.store .table .table-heading .table-context-menu li{
     padding: 10px;
     color: #555;
     cursor: pointer;
 }
-.store .product .product-heading .product-context-menu li:hover {
+.store .table .table-heading .table-context-menu li:hover {
     background-color: #f2f2f2;
 }
-.store .product .product-heading .product-context-menu li:not(:last-child){
+.store .table .table-heading .table-context-menu li:not(:last-child){
     border-bottom: 1px solid #ddd;
 }
-.store .product .product-heading .product-context-menu li span{
+.store .table .table-heading .table-context-menu li span{
     font-weight: 600;
 }
-.store .product .product-heading .product-context-menu li span i{
+.store .table .table-heading .table-context-menu li span i{
     margin-right: 6px;
 }
-.store .product .product-content {
+.store .table .table-content {
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.store .product .product-content h4 {
+.store .table .table-content h4 {
     font-size: 2.5rem;
     font-weight: 600;
 }
-.store .product .product-info {
+.store .table .table-info {
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.store .product .product-info span.tag {
+.store .table .table-info span.tag {
     border: 0;
     border-radius: 3rem;
 
@@ -358,7 +365,7 @@ button:is(.add, .substract) {
 
     transition: var(--transition-1);
 }
-.store .product .product-info .dot {
+.store .table .table-info .dot {
     flex-shrink: 0;
     background-color: #090909;
     height: 8px;
@@ -366,7 +373,7 @@ button:is(.add, .substract) {
     margin-right: 6px;
     border-radius: 3rem;
 }
-.store .product .product-info span.editing.tag {
+.store .table .table-info span.editing.tag {
     color: #090909;
 }
 
@@ -389,7 +396,7 @@ button.settings {
     padding: 0;
     transform: translate(0px, -10px);
 }
-.store .product.selected button.settings {
+.store .table.selected button.settings {
     display: flex;
 }
 button.settings:focus-visible {
@@ -432,7 +439,7 @@ button.settings i {
 }
 
 @media (min-width: 768px) {
-    .store .product .product-info span.tag {
+    .store .table .table-info span.tag {
         font-size: 22px;
     }
     .card {
@@ -441,11 +448,11 @@ button.settings i {
         max-width: 70%;
         height: 750px;
     }
-    .store .product {
+    .store .table {
         height: 200px;
     }
     
-    .store .product .product-content h4 {
+    .store .table .table-content h4 {
         font-size: 5rem;
         font-weight: 600;
     }
