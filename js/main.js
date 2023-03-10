@@ -1,40 +1,102 @@
 // add a redo funcitonality
 // ádd the null systems logo on the nav.
 const default_tables = [ //default values
-    {   id: 1,
-        quantity: 0,
-        label: '#1',
-        editing: false,
+    {   id: 1, 
+        label: 'Default #1',
+        quantities: [20, 30, 50],
+        editing: null,
     },
     {   id: 2,
-        quantity: 0,
-        label: '#2',
-        editing: false,
+        label: 'Default #2',
+        quantities: [10, 280, 20],
+        editing: null,
     },
 ]
+const selectedTable = JSON.parse(localStorage.getItem('selectedTable')) || { id: 0};
+
 const tables = JSON.parse(localStorage.getItem('tables')) || default_tables;
-
-new MiniBar(document.querySelector('#scroll-container'));
-
+// new MiniBar(document.querySelector('#scroll-container'));
 
 document.addEventListener('alpine:init', () => {
     Alpine.data('store', () => ({
         timeout: {
-            // productWidth: 0,
+            quantity: 0,
+            focus: 0
         },
         init() {
-            // 
+            if (selectedTable.id !== 0) return; //if there's not selectedTable on localstorage assign the first one 
             this.tables.map((table_, index) => {
                 if (index === 0) {
                     this.selectedTable.id = table_.id
                 }
                 if (this.selectedTable.id === table_.id) {
-                    this.selectedTable.label = table_.label
+                    this.selectedTable.label = table_.label;
+                    this.selectedTable.quantities = table_.quantities;
+                    this.selectedTable.editing = null;
+                    this.updateLocalStorage('selectedTable', this.selectedTable, { serialize: true });
                 }
             });
         },
+        updateLabel(action = 'enter',input){ // rewriting the tables array
+            // console.log(action);
+            if (action === 'unfocused' ) {
+                console.log(input === document.activeElement);
+            }
+            if (action === 'enter') {
+                console.log('uwu');
+            }
+            const label_ = input.value;
+            const { id, label } = this.selectedTable;
+            const new_label = label_.replace(/\s+/g, ' ').trim();
+            this.selectedTable.label = new_label || label;
+            
+            // this.tables.map((table) => { if (table.id === id) table.label = new_label; })
+            // this.updateLocalStorage('tables', this.tables, {serialize: true});
+        },
+        enableEdit({ id }){
+            // this.tables.map((table) => {
+            //     if (id == table.id) table.editing = true;
+            // });
+        },
+        editingLabel: false,
+        focus_quantity(index, label) {
+            this.focus = setTimeout(() => { // we need to make this function to enter after our .outside handler (saveQuantity)
+                if (this.selectedTable.editing === index) return; // ignore if we select the same one
+                this.selectedTable.editing = index;
+                const input = document.querySelector(`#input-quantity-${index}`);
+                this.timeout.quantity = setTimeout(() => {
+                    input.focus();
+                }, 0);
+            }, 0)
+        },
+        saveQuantity(action, index, element) {
+            if (this.selectedTable.editing !== index) return; //validating that only the selected will be triggered
+            const index_editing = this.selectedTable.editing;
+            this.selectedTable.editing = null;
+            let new_quantity;
+            if (action === 'unfocused') {
+                const input = element.querySelector('input')
+                new_quantity = input.value;
+            }
+            if (action === 'enter') new_quantity = element.value;
+            this.updateTable(new_quantity, index_editing);
+        },
+        updateTable(new_quantity, index) {
+            this.tables.map((table) => { // updating the specific quantity
+                if (table.id === this.selectedTable.id) {
+                    table.quantities[index] = new_quantity * 1;
+                }
+            });
+            this.tables.map((table_) => { // updating the selectedTable object
+                if (table_.id === this.selectedTable.id) {
+                    this.selectedTable.quantities = table_.quantities;
+                }
+            });
+            this.updateLocalStorage('selectedTable', this.selectedTable, { serialize: true })
+            this.updateLocalStorage('tables', this.tables, { serialize: true });
+        },
         modal: false,
-        deleteTable(id){
+        deleteTable(id) {
             this.tables.forEach((table_, index) => {
                 if (id === table_.id) {
                     this.tables.splice(index, 1);
@@ -67,15 +129,15 @@ document.addEventListener('alpine:init', () => {
             });
             this.updateLocalStorage('tables', this.tables, {serialize: true});
         },
-        modalSelected: 'papo',
         // everytime that we select a different table its editing value will be set to false, (watcher)
         contextMenu: 0,
-        selectedTable: {id: 0, label: '', quantity: 0},
+        new_quantity: 0,
+        selectedTable: selectedTable,
         tables: [...tables],
         unSelect(id){
             this.tables.map((table) => { if(table.id === id) table.editing = false; })
         },
-        selectTable({ id, label }) {
+        selectTable({ id, label, quantities }) {
             if (this.selectedTable.id !== id) this.unSelect(id);
             // clean the rest
             this.tables.map((table) => {
@@ -83,38 +145,22 @@ document.addEventListener('alpine:init', () => {
             })
             this.selectedTable.id = id;
             this.selectedTable.label = label;
+            this.selectedTable.quantities = quantities;
+            
+            this.updateLocalStorage('selectedTable', this.selectedTable, {serialize: true});
         },
-        showDelete(id){ //change the contextMenu only if its different or if we set it to 0.
-            this.modal = true;
-        },
-        updateLabel({ id, label}, label_){
-            const new_label = label_.replace(/\s+/g, ' ').trim();
-            this.selectedTable.label = new_label || label;
-            // rewriting thew tables array
-            this.tables.map((table) => { if(table.id === id) table.label = new_label; })
-            this.updateLocalStorage('tables', this.tables, {serialize: true});
-        },
-        enableEdit({ id }){
-            this.tables.map((table) => {
-                if (id == table.id) table.editing = true;
-            });
-        },
-        clickOutside({ id, label }, label_) {
-            // handle if its outside the .store
-            if (id !== this.selectedTable.id) return;
-            if (id !== this.selectedTable.id) return;
-            let editing;
-            this.tables.map((table) => { if(table.id === id) editing = table.editing })
+        focus_newQuantity(index, label) {},
+        clickOutside(index, label_) {
+            // if (id !== this.selectedTable.id) return;
+            // let editing;
+            // this.tables.map((table) => { if(table.id === id) editing = table.editing })
 
-            this.unSelect(id);
-            if (editing) { 
-                this.updateLabel({id, label}, label_)
-                window.getSelection().removeAllRanges();
-            }
+            // this.unSelect(id);
+            // this.updateLabel({id, label}, label_)
         },
         enterPressed({ id, label }, label_){
             this.unSelect(id)
-            this.updateLabel({id, label},label_)
+            this.updateLabel({id, label}, label_)
         },
         inputQuantity: 0,
         invalidQuantity: false,
@@ -159,10 +205,8 @@ document.addEventListener('alpine:init', () => {
         },
         updateLocalStorage(key, value, options = {serialize: false}){
             if (options.serialize) {
-                // console.log('serializing');
                 localStorage.setItem(key, JSON.stringify(value))                
             }else {
-                // console.log('not serializing');
                 localStorage.setItem(key, value)                
             }
         }

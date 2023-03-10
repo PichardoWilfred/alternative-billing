@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerson app</title>
+    <title>Alternative billing</title>
     <link rel="stylesheet" href="./styles/reset.css" media="screen" />
     <link rel="stylesheet" href="./styles/styles.css" media="screen" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -23,7 +23,7 @@
             </button>
         </nav>
         <!-- delete modal -->
-        <div x-show="modal" class="modal-container" x-cloak>
+        <div x-show="modal" class="modal-container" x-transition.opacity x-cloak>
             <div class="modal-body">
                 <div class="header">
                     <h4>
@@ -51,73 +51,42 @@
             <header>
                 <ul class="table-list">
                     <template x-for="(table, index) in tables" :key="table.id">
-                        <li x-text="table.label" :class="table.id === selectedTable.id && 'selected'"></li>
+                        <li :class="table.id === selectedTable.id && 'selected'" @click="() => {selectTable(table)}">
+                            <span x-text="table.label" class="text-truncate"></span>
+                        </li>
                     </template>
                 </ul>
             </header>
             <div class="card">
-                <div id="scroll-container" :class="!tables.length && 'not-found'">
-                    <div class="store">    
-                        <template x-for="(table, index) in tables" :key="index">
-                            <div class="table" :id="`table-${table.id}`" :class="(table.id === selectedTable.id) && 'selected'" @click="selectTable(table)" x-transition.opacity  x-cloak>
-                                <div class="table-heading">
-                                    <button class="settings" @click="() => {showDelete(table.id)}">
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </button>
-                                    <div x-show="contextMenu === table.id" class="table-context-menu" x-transition.opacity >
-                                        <ul>
-                                            <li>
-                                                <span>
-                                                    <i class="fa-regular fa-trash-can"></i>
-                                                    Eliminar sección
-                                                </span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="table-content">
-                                    <h4 id="table-quantity" x-text="table.quantity" ></h4>
-                                </div>
-                                <div class="table-info">
-                                    <div x-show="!table.editing" class="dot" x-transition.opacity></div>
-                                    <span
-                                        onkeypress="return (this.innerText.length <= 8)"
-                                        @click.prevent="enableEdit(table)"
-                                        @click.outside="clickOutside(table, $el.textContent)"
-                                        @keydown.enter.prevent="enterPressed(table, $el.textContent)"
-                                        :contenteditable="table.id === selectedTable.id" 
-                                        class="tag" :class="table.editing && 'editing'" 
-                                        x-text="table.label"
-                                        :disabled="!table.editing">
-                                    </span>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                    <template x-if="!tables.length">
-                        <div class="not-found">
-                            <span>
-                                :(
-                            </span>
-                            <h4>
-                                Lo sentimos, no encontramos ninguna tabla en esta sesión. 
-                            </h4>
-                        </div>
-                    </template>
+                <div class="card-header">
+                    <input type="text" class="table-name" 
+                    x-model="selectedTable.label"
+                    @click="()"
+                    @click.outside="() => { updateLabel('unfocused', $el) }"
+                    @keydown.enter.prevent="updateLabel('enter', $el)"
+                    >
+                    <button type="button" class="delete-table" @click="() => { modal = true }">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
                 </div>
-                <div class="form-group"> <!-- validar que sea un numero porque Firefox no deja poner solo texto... -->
-                    <button type="button" class="substract" @click="editQuantity('substract')">
-                        <i class="fa-solid fa-minus"></i>           
-                    </button>
-                    <input
-                        x-model.number="inputQuantity" 
-                        @keydown.enter.prevent="editQuantity('add')"
-                        type="number"
-                        class="quantity" :class="invalidQuantity && 'invalid'"
-                        pattern="[0-9]*" placeholder="Ingrese la cantidad que quiere añadir o substraer">
-                    <button type="button" class="add" @click="editQuantity('add')">
-                        <i class="fa-solid fa-plus"></i>           
-                    </button>
+                <ul class="table">
+                    <template x-for="(quantity, index) in selectedTable.quantities" :key="index">
+                        <li class="quantity" @click.outside="()=> { saveQuantity('unfocused', index, $el) }" @click="() => { focus_quantity(index) }" > 
+                            <input :id="`input-quantity-${index}`" type="text" class="quantity" 
+                                x-model="quantity"
+                                @keydown.enter.prevent="saveQuantity('enter', index, $el)"
+                                :disabled="index !== selectedTable.editing">
+                        </li>
+                    </template>                        
+                    <li class="new-quantity" @click="() => { focus_newQuantity() }">
+                        <input x-model.number="new_quantity" type="number" class="new-quantity">
+                    </li>
+                </ul>
+            </div>
+            <div class="table-total">
+                <div class="group">
+                    <h4 class="label">TOTAL:</h4>
+                    <h3 class="value">850</h3>
                 </div>
             </div>
         </main>
