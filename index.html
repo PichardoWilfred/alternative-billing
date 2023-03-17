@@ -61,9 +61,10 @@
                 <div class="card-header">
                     <input type="text" class="table-name" 
                     x-model="selectedTable.label"
-                    @click="()"
-                    @click.outside="() => { updateLabel('unfocused', $el) }"
-                    @keydown.enter.prevent="updateLabel('enter', $el)"
+                    @click="() => {focusLabel()}"
+                    @click.outside="() => { updateLabel( $el) }"
+                    @keydown.enter.prevent="() => { updateLabel($el) }"
+                    maxlength="15"
                     >
                     <button type="button" class="delete-table" @click="() => { modal = true }">
                         <i class="fa-solid fa-trash"></i>
@@ -75,7 +76,7 @@
                             <input :id="`input-quantity-${index}`" type="text" class="quantity" 
                                 x-model="quantity"
                                 @keydown.enter.prevent="saveQuantity('enter', index, $el)"
-                                :disabled="index !== selectedTable.editing">
+                                :disabled="index !== selectedTable.editing.quantity">
                         </li>
                     </template>                        
                     <li class="new-quantity" @click="() => { focus_newQuantity() }">
