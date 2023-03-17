@@ -18,7 +18,7 @@ const default_tables = [ //default values
         },
     },
 ]
-const selectedTable = JSON.parse(localStorage.getItem('selectedTable')) || { id: 0, editing: {label: false, quantity: false}};
+const selectedTable = JSON.parse(localStorage.getItem('selectedTable')) || { id: 0, editing: {label: false, quantity: false, new_quantity: false}};
 
 const tables = JSON.parse(localStorage.getItem('tables')) || default_tables;
 // new MiniBar(document.querySelector('#scroll-container'));
@@ -27,9 +27,13 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('store', () => ({
         timeout: {
             quantity: 0,
-            focus: 0
+            focus_quantity: 0,
+            focus_label: 0,
         },
         modal: false,
+        tables: [...tables],
+        new_quantity: 0,
+        selectedTable: selectedTable,
         init() {
             if (selectedTable.id !== 0) return; //if there's not selectedTable on localstorage assign the first one 
             this.tables.map((table_, index) => {
@@ -42,34 +46,23 @@ document.addEventListener('alpine:init', () => {
                     
                     this.selectedTable['editing'].label = false;
                     this.selectedTable['editing'].quantity = false;
+                    this.selectedTable['editing'].new_quantity = false;
 
                     this.updateLocalStorage('selectedTable', this.selectedTable, { serialize: true });
                 } 
             });
         },
-        updateLabel(element) { // rewriting the tables array
-            element.blur();
-            const label_ = element.value;
-            const new_label = label_.replace(/\s+/g, ' ').trim();
-            if (new_label) {
-                this.selectedTable.label = new_label || label;
-                this.updateTable({ type: 'label', new_label});
-            }
-            //maybe clean the input
-        },
-        focusLabel() {
-            this.tables.map((table) => {
-                if (table.id === this.selectedTable.id) table.editing.label = true;
+        focus_label() {
+            this.timeout.focus_label = setTimeout(() => {
+                this.tables.map((table) => {
+                    if (table.id === this.selectedTable.id) {
+                        table.editing.label = true;
+                    };
+                });
             });
         },
-        // enableEdit({ id }){
-            // this.tables.map((table) => {
-            //     if (id == table.id) table.editing = true;
-            // });
-        // },
-        // editingLabel: false,
-        focus_quantity(index, label) {
-            this.timeout.focus = setTimeout(() => { // we need to make this function to enter after our .outside handler (saveQuantity)
+        focus_quantity(index) {
+            this.timeout.focus_quantity = setTimeout(() => { // we need to make this function to enter after our .outside handler (saveQuantity)
                 if (this.selectedTable.editing.quantity === index) return; // ignore if we select the same one
                 this.selectedTable.editing.quantity = index;
                 const input = document.querySelector(`#input-quantity-${index}`);
@@ -77,7 +70,31 @@ document.addEventListener('alpine:init', () => {
                     input.focus();
                 }, 0);
             }, 0);
-        }, 
+        },
+        focus_newQuantity() {
+            this.tables.map((table) => {
+                if (table.id === this.selectedTable.id) table.editing.new_quantity = true;
+            });
+        },
+        saveLabel(element) { // rewriting the tables array
+            element.blur();
+            const label_ = element.value;
+            const new_label = label_.replace(/\s+/g, ' ').trim();
+            if (new_label) {
+                this.selectedTable.label = new_label || label;
+                this.updateTable({ type: 'label', new_label: this.selectedTable.label}); //save label
+            }
+        },
+        saveNewQuantity(element) {
+            console.log(element);
+            element.blur();
+            const quantity = element.value;
+            const new_label = label_.replace(/\s+/g, ' ').trim();
+            console.log(new_label);
+            if (new_label) {
+                this.updateTable({ type: 'new_quantity', new_quantity: this.new_quantity}); //save label
+            }
+        },
         saveQuantity(action, index, element) {
             if (this.selectedTable.editing.quantity !== index) return; //validating that only the selected will be triggered
             const index_editing = this.selectedTable.editing.quantity;
@@ -93,12 +110,14 @@ document.addEventListener('alpine:init', () => {
         },
         // new_quantity = 0, index = 0, action
         updateTable(action) {
-            let last_edited;  
+            let last_edited;
             this.tables.map((table) => {
-                if (table.editing.label) {
+                if (table.editing.label || table.editing.new_quantity) {
                     last_edited = table;
                     table.editing.label = false;
+                    table.editing.new_quantity = false;
                 };
+
                 if (table.id === this.selectedTable.id) {  // updating the specific quantity
                     if (action.type === 'quantity') {
                         table.quantities[action.index] = action.new_quantity * 1;
@@ -107,6 +126,9 @@ document.addEventListener('alpine:init', () => {
                     // we also need to be recently focused
                     if (action.type === 'label' && last_edited) {
                         table.label = action.new_label;
+                    }
+                    if (action.type === 'new_quantity') {
+                        
                     }
                 }
             });
@@ -151,10 +173,6 @@ document.addEventListener('alpine:init', () => {
             this.updateLocalStorage('tables', this.tables, { serialize: true });
         },
         // everytime that we select a different table its editing value will be set to false, (watcher)
-        contextMenu: 0,
-        new_quantity: 0,
-        selectedTable: selectedTable,
-        tables: [...tables],
         unSelect(id){
             this.tables.map((table) => { if(table.id === id) {
                 table.editing.label = false;
@@ -173,7 +191,13 @@ document.addEventListener('alpine:init', () => {
             
             this.updateLocalStorage('selectedTable', this.selectedTable, { serialize: true });
         },
-        focus_newQuantity(index, label) {},
+        updateLocalStorage(key, value, options = {serialize: false}){
+            if (options.serialize) {
+                localStorage.setItem(key, JSON.stringify(value))                
+            }else {
+                localStorage.setItem(key, value)                
+            }
+        },
         // clickOutside(index, label_) {
         // if (id !== this.selectedTable.id) return;
         // let editing;
@@ -198,7 +222,6 @@ document.addEventListener('alpine:init', () => {
         //         this.invalidQuantity = true;
         //         return;
         //     }
-            
         //     this.invalidQuantity = false;
         //     const new_quantity = Math.ceil(this.inputQuantity);
         //     // console.log(`${action}ing: ${new_quantity} to: ${this.selectedTable.id} - ${this.selectedTable.label}`);
@@ -226,13 +249,6 @@ document.addEventListener('alpine:init', () => {
         //     // get the input data
         //     // clean the input
         // },
-        updateLocalStorage(key, value, options = {serialize: false}){
-            if (options.serialize) {
-                localStorage.setItem(key, JSON.stringify(value))                
-            }else {
-                localStorage.setItem(key, value)                
-            }
-        }
     }));
 })
 

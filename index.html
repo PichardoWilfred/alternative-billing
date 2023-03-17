@@ -60,11 +60,11 @@
             <div class="card">
                 <div class="card-header">
                     <input type="text" class="table-name" 
-                    x-model="selectedTable.label"
-                    @click="() => {focusLabel()}"
-                    @click.outside="() => { updateLabel( $el) }"
-                    @keydown.enter.prevent="() => { updateLabel($el) }"
-                    maxlength="15"
+                        x-model="selectedTable.label"
+                        @click="() => { focus_label() }"
+                        @click.outside="() => { saveLabel($el) }"
+                        @keydown.enter.prevent="() => { saveLabel($el) }"
+                        maxlength="15"
                     >
                     <button type="button" class="delete-table" @click="() => { modal = true }">
                         <i class="fa-solid fa-trash"></i>
@@ -72,15 +72,19 @@
                 </div>
                 <ul class="table">
                     <template x-for="(quantity, index) in selectedTable.quantities" :key="index">
-                        <li class="quantity" @click.outside="()=> { saveQuantity('unfocused', index, $el) }" @click="() => { focus_quantity(index) }" > 
+                        <li class="quantity" @click.outside="() => { saveQuantity('unfocused', index, $el) }" @click="() => { focus_quantity(index) }" > 
                             <input :id="`input-quantity-${index}`" type="text" class="quantity" 
                                 x-model="quantity"
                                 @keydown.enter.prevent="saveQuantity('enter', index, $el)"
                                 :disabled="index !== selectedTable.editing.quantity">
                         </li>
                     </template>                        
-                    <li class="new-quantity" @click="() => { focus_newQuantity() }">
-                        <input x-model.number="new_quantity" type="number" class="new-quantity">
+                    <li class="new-quantity" @click="() => { focus_newQuantity($el) }">
+                        <input 
+                        @click.outside="() => {saveNewQuantity($el)}"
+                        @keydown.enter.prevent="saveNewQuantity($el)"
+                        x-model.number="new_quantity" 
+                        type="number" class="new-quantity">
                     </li>
                 </ul>
             </div>
