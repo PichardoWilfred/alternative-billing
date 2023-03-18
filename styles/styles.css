@@ -140,6 +140,8 @@ nav.main button i {
 }
 main {
     flex-grow: 3;
+    max-height: calc(100% - 148px);
+    /* overflow-y: scroll; */
 }
 
 :root {
@@ -152,19 +154,6 @@ main {
     margin-top: 18px;
     width: 100%;
 }
-/* input.quantity {
-    width: 80%;
-    font-size: 22px !important;
-    border: 1px solid rgb(206, 206, 206);
-    border-radius: 4px;
-    color: #1d1d1d;
-    
-    padding: 5px 8px;
-    
-    font-size: 14px;
-    font-weight: 600;
-    font-family: 'Poppins', sans-serif;
-} */
 
 input.quantity.invalid {
     border: 1px solid #F44336 !important;
@@ -179,7 +168,7 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
 input[type="number"] {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
 }
 input.quantity::placeholder {
     color: #c7c7c7;
@@ -192,7 +181,7 @@ input.quantity:focus {
 header {
     margin-top: 22px;
 }
-header ul.table-list{
+header ul.table-list {
     display: flex;
     overflow-x: scroll;
     border-bottom: 1px solid #D9D9D9;
@@ -226,12 +215,10 @@ header ul.table-list li.selected::after {
 .card {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     width: 100%;
-    /* padding: 1.5rem; */
+    max-height: calc(100% - 53px);
     margin-inline: auto;
-
-    border-radius: 6px;
 
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
@@ -250,7 +237,7 @@ header ul.table-list li.selected::after {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
-    padding: 0 26px 16px 20px;
+    padding: 0 20px 16px 20px;
     border-bottom: 2px solid #090909;
 }
 .card-header input.table-name {
@@ -282,46 +269,23 @@ header ul.table-list li.selected::after {
 .divider {
     background-color: #656565;
 }
-.store {
-    display: flex;
-    align-content: start;
-    flex-wrap: wrap;
-    
-    background-color: #efefef;
-    margin-bottom: 20px;
 
-    max-height: 100%;
-}
-
-.store .table {
+ul.table {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    position: relative;
     flex-grow: 1;
 
-    width: calc(50% - 2rem);
-    min-height: 180px;
+    max-height: calc(100% - 60px);
+    overflow-y: scroll;
 
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
-    padding: 1rem;
-    cursor: pointer;
 }
-.store .table::after {
-    content: '';
-    display: block;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 8px;
-    background-color: #FFF;
-    transition: var(--transition-1);
-}
-.store .table.selected {
+
+/* .store ul.table.selected {
     animation: select-table ease-out 0.25s;
-}
+} */
 @keyframes select-table {
     from {
         background-color: #f3f3f3;
@@ -330,9 +294,7 @@ header ul.table-list li.selected::after {
         background-color: white;
     }
 }
-.store .table.selected::after {
-}
-.store .table .table-heading .table-context-menu {
+.store ul.table .table-heading .table-context-menu {
     position: absolute;
     top: 0;
     right: 0;
@@ -344,22 +306,22 @@ header ul.table-list li.selected::after {
     width: max-content;
     height: 35px;
 }
-
-.store .table .table-heading .table-context-menu li{
+/* context-menu */
+.store ul.table .table-heading .table-context-menu li {
     padding: 10px;
     color: #555;
     cursor: pointer;
 }
-.store .table .table-heading .table-context-menu li:hover {
+.store ul.table .table-heading .table-context-menu li:hover {
     background-color: #f2f2f2;
 }
-.store .table .table-heading .table-context-menu li:not(:last-child){
+.store ul.table .table-heading .table-context-menu li:not(:last-child){
     border-bottom: 1px solid #ddd;
 }
-.store .table .table-heading .table-context-menu li span {
+.store ul.table .table-heading .table-context-menu li span {
     font-weight: 600;
 }
-.store .table .table-heading .table-context-menu li span i{
+.store ul.table .table-heading .table-context-menu li span i{
     margin-right: 6px;
 }
 
@@ -367,8 +329,8 @@ ul.table li.quantity, ul.table li.new-quantity {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: end;
-    padding: 12px 30px; 
+
+    padding: 12px 30px 12px 20px; 
     cursor: pointer;
     transition: all 0.1s ease-in-out;
 }
@@ -394,7 +356,7 @@ ul.table li span {
 }
 ul.table li input.quantity {
     display: flex;
-    text-align: end;
+    text-align: start;
     width: 100%;
     height: 20px;
     font-weight: 600;
@@ -425,16 +387,16 @@ ul.table li input.new-quantity:focus {
     color: #090909;
     outline: none;
 }
-.store .table .table-content h4 {
+.store ul.table .table-content h4 {
     font-size: 2.5rem;
     font-weight: 600;
 }
-.store .table .table-info {
+.store ul.table .table-info {
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.store .table .table-info span.tag {
+.store ul.table .table-info span.tag {
     border: 0;
     border-radius: 3rem;
 
@@ -458,7 +420,7 @@ ul.table li input.new-quantity:focus {
 
     transition: var(--transition-1);
 }
-.store .table .table-info .dot {
+.store ul.table .table-info .dot {
     flex-shrink: 0;
     background-color: #090909;
     height: 8px;
@@ -466,7 +428,7 @@ ul.table li input.new-quantity:focus {
     margin-right: 6px;
     border-radius: 3rem;
 }
-.store .table .table-info span.editing.tag {
+.store ul.table .table-info span.editing.tag {
     color: #090909;
 }
 
@@ -489,7 +451,7 @@ button.settings {
     padding: 0;
     transform: translate(0px, -10px);
 }
-.store .table.selected button.settings {
+.store ul.table.selected button.settings {
     display: flex;
 }
 button.settings:focus-visible {
@@ -536,7 +498,8 @@ button.settings i {
     bottom: 0;
 
     display: flex;
-    justify-content: end;
+    align-items: center;
+    justify-content: space-between;
 
     width: 100%;
     padding: 1rem;
@@ -546,10 +509,11 @@ button.settings i {
 }
 
 .table-total .group {
-    text-align: end;
+    margin-right: auto;
+    text-align: start;
 }
 
-.table-total .group h4.label{
+.table-total .group h4.label {
     font-size: 13px;
     font-weight: 600;
     color:#C9C9C9;
@@ -563,23 +527,13 @@ button.settings i {
 }
 
 @media (min-width: 768px) {
-    .store .table .table-info span.tag {
-        font-size: 22px;
-    }
     .card {
         margin-top: 7rem;
 
         max-width: 70%;
         height: 750px;
     }
-    .store .table {
-        height: 200px;
-    }
     
-    .store .table .table-content h4 {
-        font-size: 5rem;
-        font-weight: 600;
-    }
 }
 @media (min-width: 1200px) {
     .card {
