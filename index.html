@@ -11,6 +11,8 @@
     <link href="https://unpkg.com/minibarjs@latest/dist/minibar.min.css" rel="stylesheet" type="text/css">
     <script src="https://unpkg.com/minibarjs@latest/dist/minibar.min.js" type="text/javascript"></script>
     <script type="module" src="./js/main.js"></script>
+    <!-- <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/@ryangjchandler/alpine-mask@0.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
@@ -73,28 +75,28 @@
                 <ul class="table">
                     <template x-for="(quantity, index) in selectedTable.quantities" :key="index">
                         <li class="quantity" @click.outside="() => { saveQuantity('unfocused', index, $el) }" @click="() => { focus_quantity(index) }" > 
-                            <input :id="`input-quantity-${index}`" type="text" class="quantity" 
+                            <input :id="`input-quantity-${index}`" class="quantity" 
                                 x-model="quantity"
+                                x-mask.numeral
                                 @keydown.enter.prevent="saveQuantity('enter', index, $el)"
                                 :disabled="index !== selectedTable.editing.quantity">
                         </li>
                     </template>                        
                     <li class="new-quantity" @click="() => { focus_newQuantity($el) }">
-                        <input 
-                        @click.outside="() => {saveNewQuantity($el)}"
-                        @keydown.enter.prevent="saveNewQuantity($el)"
-                        x-model.number="new_quantity" 
-                        type="number" class="new-quantity">
+                        <input class="new-quantity"
+                        x-model="new_quantity"
+                        x-mask.numeral
+                        @keydown.enter.prevent="saveNewQuantity($el)">
                     </li>
                 </ul>
             </div>
-            <div class="table-total">
-                <div class="group">
-                    <h4 class="label">TOTAL:</h4>
-                    <h3 class="value">850</h3>
-                </div>
-            </div>
         </main>
+        <div class="table-total">
+            <div class="group">
+                <h4 class="label">TOTAL:</h4>
+                <h3 x-mask.numeral class="value" x-text="quantity_sum"></h3>
+            </div>
+        </div>
     </div>
 </body>
 <style></style>
