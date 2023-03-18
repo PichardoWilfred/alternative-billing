@@ -135,20 +135,11 @@ document.addEventListener('alpine:init', () => {
                     if (action.type === 'label' && last_edited) {
                         table.label = action.new_label;
                     }
-<<<<<<< HEAD
-
-                    console.log(`${action.type} is`);
-                    console.log(last_edited);
-                    if (action.type === 'new_quantity' && last_edited) {
-                        console.log(last_edited);
-                        // console.log('need to update');
-=======
                     if (action.type === 'new_quantity') {
                         table.quantities.push(action.new_quantity.replace(/\D/g,'') * 1);
                         this.selectedTable.quantities = table.quantities;
                         this.new_quantity = 0;
                         action.el.focus();
->>>>>>> 2f6f672cae0513175dd1d725f2cc8a83cafce2ad
                     }
                 }
             });
