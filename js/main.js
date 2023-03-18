@@ -28,6 +28,7 @@ document.addEventListener('alpine:init', () => {
         timeout: {
             quantity: 0,
             focus_quantity: 0,
+            focus_new_quantity: 0,
             focus_label: 0,
         },
         modal: false,
@@ -72,11 +73,13 @@ document.addEventListener('alpine:init', () => {
             }, 0);
         },
         focus_newQuantity() {
-            this.tables.map((table) => {
-                if (table.id === this.selectedTable.id) table.editing.new_quantity = true;
-            });
+            this.timeout.focus_new_quantity = setTimeout(() => {
+                this.tables.map((table) => {
+                    if (table.id === this.selectedTable.id) table.editing.new_quantity = true;
+                });
+            }, 0);
         },
-        saveLabel(element) { // rewriting the tables array
+        saveLabel(element) { // rewriting the tables array (make this triggewr only when its focused)
             element.blur();
             const label_ = element.value;
             const new_label = label_.replace(/\s+/g, ' ').trim();
@@ -86,12 +89,12 @@ document.addEventListener('alpine:init', () => {
             }
         },
         saveNewQuantity(element) {
-            console.log(element);
             element.blur();
             const quantity = element.value;
-            const new_label = label_.replace(/\s+/g, ' ').trim();
-            console.log(new_label);
-            if (new_label) {
+            const new_quantity = quantity.replace(/\s+/g, ' ').trim();
+            // console.log(element);
+            // evaluate if you have this focused
+            if (new_quantity) {
                 this.updateTable({ type: 'new_quantity', new_quantity: this.new_quantity}); //save label
             }
         },
@@ -112,11 +115,18 @@ document.addEventListener('alpine:init', () => {
         updateTable(action) {
             let last_edited;
             this.tables.map((table) => {
-                if (table.editing.label || table.editing.new_quantity) {
+                // console.log(`editing: ${table.editing.label ? 'label':table.editing.new_quantity ? 'new_quantity':'nothing'}`);
+                if (table.editing.label) {
+                    console.log('label true');
                     last_edited = table;
                     table.editing.label = false;
+                }
+                
+                if (table.editing.new_quantity) {
+                    last_edited = table;
+                    console.log('new quantity true');
                     table.editing.new_quantity = false;
-                };
+                }
 
                 if (table.id === this.selectedTable.id) {  // updating the specific quantity
                     if (action.type === 'quantity') {
@@ -127,8 +137,12 @@ document.addEventListener('alpine:init', () => {
                     if (action.type === 'label' && last_edited) {
                         table.label = action.new_label;
                     }
-                    if (action.type === 'new_quantity') {
-                        
+
+                    console.log(`${action.type} is`);
+                    console.log(last_edited);
+                    if (action.type === 'new_quantity' && last_edited) {
+                        console.log(last_edited);
+                        // console.log('need to update');
                     }
                 }
             });
