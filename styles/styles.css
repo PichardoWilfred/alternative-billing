@@ -140,7 +140,7 @@ nav.main button i {
 }
 main {
     flex-grow: 3;
-    max-height: calc(100% - 148px);
+    max-height: calc(100% - 144px);
     /* overflow-y: scroll; */
 }
 
@@ -283,9 +283,6 @@ ul.table {
     box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
 }
 
-/* .store ul.table.selected {
-    animation: select-table ease-out 0.25s;
-} */
 @keyframes select-table {
     from {
         background-color: #f3f3f3;
@@ -325,7 +322,7 @@ ul.table {
     margin-right: 6px;
 }
 
-ul.table li.quantity, ul.table li.new-quantity {
+ul.table li.quantity {
     position: relative;
     display: flex;
     align-items: center;
@@ -371,31 +368,8 @@ ul.table li input.quantity:disabled {
     pointer-events: none;
     transition: all 0.15s ease-in-out;
 }
-ul.table li input.new-quantity {
-    display: flex;
-    font-weight: 600;
-    font-size: 20px;
-    text-align: end;
-    height: 20px;
-    width: 100%;
-    background-color: transparent;
-    color: #bbbbbb;
-    transition: all 0.15s ease-in-out;
-    border: 0;
-}
-ul.table li input.new-quantity:focus {
-    color: #090909;
-    outline: none;
-}
-.store ul.table .table-content h4 {
-    font-size: 2.5rem;
-    font-weight: 600;
-}
-.store ul.table .table-info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+/* 
+
 .store ul.table .table-info span.tag {
     border: 0;
     border-radius: 3rem;
@@ -430,27 +404,7 @@ ul.table li input.new-quantity:focus {
 }
 .store ul.table .table-info span.editing.tag {
     color: #090909;
-}
-
-span:is(:active, :focus, :focus-visible ).tag {
-    outline: none;
-}
-button.settings {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-
-    width: 10px;
-    height: 40px;
-
-    font-size: 26px;
-    margin-left: auto;
-    background-color: transparent;    
-    color: #cbcbcb;
-    padding: 0;
-    transform: translate(0px, -10px);
-}
+    
 .store ul.table.selected button.settings {
     display: flex;
 }
@@ -476,6 +430,27 @@ button.settings i {
     z-index: 3;
 }
 
+span:is(:active, :focus, :focus-visible ).tag {
+    outline: none;
+}
+button.settings {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    width: 10px;
+    height: 40px;
+
+    font-size: 26px;
+    margin-left: auto;
+    background-color: transparent;    
+    color: #cbcbcb;
+    padding: 0;
+    transform: translate(0px, -10px);
+}
+} */
+
 #scroll-container.not-found .not-found {
     text-align: center;
     font-weight: 600;
@@ -493,7 +468,7 @@ button.settings i {
     line-height: 1.2;
 }
 
-.table-total {
+.table-sum {
     position: fixed;
     bottom: 0;
 
@@ -506,34 +481,67 @@ button.settings i {
 
     background-color: white;
     box-shadow: 0px 0px 8px rgba(17, 17, 26, 0.1), 0px 1px 0px rgba(17, 17, 26, 0.05);
+    flex-grow: 1;
 }
 
-.table-total .group {
+.table-sum .total {
     margin-right: auto;
     text-align: start;
 }
 
-.table-total .group h4.label {
+.table-sum .total h4.label {
     font-size: 13px;
     font-weight: 600;
     color:#C9C9C9;
     text-transform: uppercase;
-    margin-bottom: 6px;
+    margin-bottom: 3px;
 }
-.table-total .group h3.value {
+.table-sum .total h3.value {
     font-weight: 700;
     font-size: 26px;
     color: #090909;
 }
 
+.new-quantity {
+    display: flex;
+    justify-content: end;
+    text-align: end;
+    padding-left: 10px;
+    background-color: transparent;
+    color: #bbbbbb;
+    flex-grow: 2;
+    transition: all 0.15s ease-in-out;
+}
+.new-quantity input {
+    display: flex;
+    flex-grow: 1;
+    font-weight: 600;
+    font-size: 17px;
+    padding-inline: 8px;
+    margin-right: 6px;
+    border-radius: 5px;    
+    border: 1px solid #bbbbbb;
+    max-width: 200px;
+    transition: all 0.15s ease-in-out;    
+}
+.new-quantity input:is(:focus, :focus-visible) {
+    border-color: #838383;
+    color: #090909;
+    outline: none;
+}
+
+.new-quantity button {
+    font-size: 15px;
+    flex-grow: 0;
+    padding: 5px 12px;
+}
+
 @media (min-width: 768px) {
     .card {
-        margin-top: 7rem;
-
         max-width: 70%;
+        margin-top: 7rem;
         height: 750px;
     }
-    
 }
 @media (min-width: 1200px) {
     .card {

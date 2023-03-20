@@ -34,6 +34,7 @@ document.addEventListener('alpine:init', () => {
         modal: false,
         tables: [...tables],
         new_quantity: 0,
+        selectedQuantities: [],
         selectedTable: selectedTable,
         init() {
             if (selectedTable.id !== 0) return; //if there's not selectedTable on localstorage assign the first one 

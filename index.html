@@ -82,19 +82,24 @@
                                 :disabled="index !== selectedTable.editing.quantity">
                         </li>
                     </template>                        
-                    <li class="new-quantity" @click="() => { focus_newQuantity($el) }">
-                        <input class="new-quantity"
-                        x-model="new_quantity"
-                        x-mask.numeral
-                        @keydown.enter.prevent="saveNewQuantity($el)">
-                    </li>
                 </ul>
             </div>
         </main>
-        <div class="table-total">
-            <div class="group">
+        <div class="table-sum">
+            <div class="total">
                 <h4 class="label">TOTAL:</h4>
                 <h3 x-mask.numeral class="value" x-text="quantity_sum"></h3>
+            </div>
+            <div class="new-quantity">
+                <input
+                x-ref="new_quantity"
+                x-model="new_quantity"
+                x-mask.numeral
+                @click="() => { focus_newQuantity() }"
+                @keydown.enter.prevent="saveNewQuantity($el)">
+                <button type="button" @click="() => {saveNewQuantity($refs.new_quantity)}">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
             </div>
         </div>
     </div>
