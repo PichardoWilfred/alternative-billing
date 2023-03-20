@@ -85,7 +85,7 @@ document.addEventListener('alpine:init', () => {
                 });
             }, 0);
         },
-        saveLabel(element) { // rewriting the tables array
+        saveLabel(element) { // rewriting the tables array (make this triggewr only when its focused)
             element.blur();
             const label_ = element.value;
             const new_label = label_.replace(/\s+/g, ' ').trim();
