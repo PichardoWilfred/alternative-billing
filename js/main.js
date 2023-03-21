@@ -2,16 +2,16 @@
 // ádd the null systems logo on the nav.
 const default_tables = [ //default values
     {   id: 1, 
-        label: 'Default #1',
-        quantities: [20, 30, 50],
+        label: 'Lista #1',
+        quantities: [],
         editing: {
             label: false,
             quantity: false
         },
     },
     {   id: 2,
-        label: 'Default #2',
-        quantities: [10, 280, 20],
+        label: 'Lista #2',
+        quantities: [],
         editing: {
             label: false,
             quantity: false
@@ -19,7 +19,6 @@ const default_tables = [ //default values
     },
 ]
 const selectedTable = JSON.parse(localStorage.getItem('selectedTable')) || { id: 0, editing: {label: false, quantity: false, new_quantity: false}};
-
 const tables = JSON.parse(localStorage.getItem('tables')) || default_tables;
 // new MiniBar(document.querySelector('#scroll-container'));
 
@@ -32,16 +31,14 @@ document.addEventListener('alpine:init', () => {
             focus_label: 0,
         },
         modal: false,
-        tables: [...tables],
+        tables,
         new_quantity: 0,
         selectedQuantities: [],
         selectedTable: selectedTable,
         init() {
             if (selectedTable.id !== 0) return; //if there's not selectedTable on localstorage assign the first one 
             this.tables.map((table_, index) => {
-                if (index === 0) {
-                    this.selectedTable.id = table_.id;
-                }
+                if (index === 0) this.selectedTable.id = table_.id;
                 if (this.selectedTable.id === table_.id) {
                     this.selectedTable.label = table_.label;
                     this.selectedTable.quantities = table_.quantities;
@@ -51,11 +48,11 @@ document.addEventListener('alpine:init', () => {
                     this.selectedTable['editing'].new_quantity = false;
 
                     this.updateLocalStorage('selectedTable', this.selectedTable, { serialize: true });
-                } 
+                }
             });
         },
         get quantity_sum() {
-            return this.selectedTable.quantities.reduce((a, b) => a + b);
+            return this.selectedTable.quantities.length ? this.selectedTable.quantities.reduce((a, b) => a + b):0;
         },
         focus_label() {
             this.timeout.focus_label = setTimeout(() => {

@@ -133,15 +133,15 @@ nav.main button {
     font-weight: 600;
     height: min-content;
     padding: 12px;
+    margin-left: auto;
 }
 nav.main button i {
     font-size: 18px;
-    margin-right: 12px;
+    margin-left: 12px;
 }
 main {
     flex-grow: 3;
     max-height: calc(100% - 144px);
-    /* overflow-y: scroll; */
 }
 
 :root {
@@ -506,7 +506,7 @@ button.settings {
     display: flex;
     justify-content: end;
     text-align: end;
-    padding-left: 10px;
+    padding-left: 20px;
     background-color: transparent;
     color: #bbbbbb;
     flex-grow: 2;
@@ -521,7 +521,8 @@ button.settings {
     margin-right: 6px;
     border-radius: 5px;    
     border: 1px solid #bbbbbb;
-    max-width: 200px;
+    width: 100%;
+    max-width: 220px;
     transition: all 0.15s ease-in-out;    
 }
 .new-quantity input:is(:focus, :focus-visible) {
@@ -533,7 +534,6 @@ button.settings {
 .new-quantity button {
     font-size: 15px;
     flex-grow: 0;
-    padding: 5px 12px;
 }
 
 @media (min-width: 768px) {
