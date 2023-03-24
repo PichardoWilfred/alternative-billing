@@ -31,11 +31,11 @@ div.container {
     z-index: 12;
 }
 .modal-container .modal-body {
-    padding: 1rem;
     background-color: white;
-    min-width: 350px;
-    width: 60%;
-    max-width: 500px;
+    max-width: 385px;
+    width: 100%;
+    padding: 1rem;
+    margin-inline: 9px;
     border-radius: 7px;
     z-index: 3;
 }
@@ -108,9 +108,11 @@ nav.main {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-height: 71px;
     flex-grow: 2;
+
+    max-height: 71px;
     padding: 12px 12px;
+    
     position: sticky;
     top: 0;
     width: 100%;
@@ -126,18 +128,28 @@ nav.main h4 {
     font-size: 38px;
     padding-block: 22px;
 }
-nav.main button {
+nav.main button.add-table {
     display: flex;
     align-items: center;
     font-size: 15px;
     font-weight: 600;
     height: min-content;
     padding: 12px;
-    margin-left: auto;
 }
-nav.main button i {
+nav.main button.reset {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 0;
+    height: 35px;
+    width: 35px;
+    border-radius: 100vmax;
+}
+nav.main button.add-table i {
     font-size: 18px;
-    margin-left: 12px;
+    margin-right: 12px;
 }
 main {
     flex-grow: 3;
@@ -187,6 +199,7 @@ header ul.table-list {
     border-bottom: 1px solid #D9D9D9;
 }
 header ul.table-list li {
+    white-space: nowrap;
     padding: 6px 12px;
     margin-left: 12px;
     margin-right: 8px;
@@ -364,92 +377,13 @@ ul.table li input.quantity {
     transition: all 0.15s ease-in-out;
 }
 ul.table li input.quantity:disabled {
+    opacity: 1; /* required on iOS */
     color: #090909;
+    -webkit-text-fill-color: #090909;
     pointer-events: none;
     transition: all 0.15s ease-in-out;
 }
-/* 
 
-.store ul.table .table-info span.tag {
-    border: 0;
-    border-radius: 3rem;
-
-    font-size: 20px;
-    font-weight: 600;
-
-    min-height: 25px;
-    line-height: 1;
-    min-width: 20%;
-    width: max-content;
-    max-width: 208px;
-
-    padding-block: 4px;
-    padding-inline: 12px;
-    background-color: #e8e8e8;
-    color: #383838;
-    
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-
-    transition: var(--transition-1);
-}
-.store ul.table .table-info .dot {
-    flex-shrink: 0;
-    background-color: #090909;
-    height: 8px;
-    width: 8px;
-    margin-right: 6px;
-    border-radius: 3rem;
-}
-.store ul.table .table-info span.editing.tag {
-    color: #090909;
-    
-.store ul.table.selected button.settings {
-    display: flex;
-}
-button.settings:focus-visible {
-    outline: none;
-}
-button.settings::before {
-    content: '';
-    border-radius: 4rem;
-    position: absolute;
-    z-index: 2;
-    display: block;
-    width: 40px;
-    height: 40px;
-    transition: var(--transition-1);
-}
-
-button.settings:hover::before {
-    background-color: #f7f7f7;
-}
-button.settings i {
-    position: relative;
-    z-index: 3;
-}
-
-span:is(:active, :focus, :focus-visible ).tag {
-    outline: none;
-}
-button.settings {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-
-    width: 10px;
-    height: 40px;
-
-    font-size: 26px;
-    margin-left: auto;
-    background-color: transparent;    
-    color: #cbcbcb;
-    padding: 0;
-    transform: translate(0px, -10px);
-}
-} */
 
 #scroll-container.not-found .not-found {
     text-align: center;
@@ -473,7 +407,7 @@ button.settings {
     bottom: 0;
 
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: space-between;
 
     width: 100%;
@@ -496,17 +430,25 @@ button.settings {
     text-transform: uppercase;
     margin-bottom: 3px;
 }
-.table-sum .total h3.value {
+.table-sum .total input.value {
+    display: flex;
+    width: 100%;
     font-weight: 700;
     font-size: 26px;
     color: #090909;
+    border: 0;
+    background-color: white !important;
 }
-
+.table-sum .total input.value:disabled {
+    opacity: 1; /* required on iOS */
+    color: #090909;
+    -webkit-text-fill-color: #090909;
+}
 .new-quantity {
     display: flex;
     justify-content: end;
     text-align: end;
-    padding-left: 20px;
+    margin-top: 8px;
     background-color: transparent;
     color: #bbbbbb;
     flex-grow: 2;
@@ -522,9 +464,9 @@ button.settings {
     border-radius: 5px;    
     border: 1px solid #bbbbbb;
     width: 100%;
-    max-width: 220px;
     transition: all 0.15s ease-in-out;    
 }
+
 .new-quantity input:is(:focus, :focus-visible) {
     border-color: #838383;
     color: #090909;

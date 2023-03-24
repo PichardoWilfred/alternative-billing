@@ -30,11 +30,53 @@ document.addEventListener('alpine:init', () => {
             focus_new_quantity: 0,
             focus_label: 0,
         },
-        modal: false,
+        modal: {
+            visible: false,
+            title: '',
+            message: {
+                text: '',
+                variables: ['']
+            },
+            message_text() {
+                this.message.variables.forEach((variable, index) => {
+                    this.message.text = this.message.text.replace(`{${index}}`, variable);
+                });
+                return this.message.text;
+            },
+            action: () => {}
+        },
+        open_modal(title = '', text = '', variables = [''], action_name ){
+            this.modal.visible = true;
+            this.modal.title = title;
+            this.modal.message = {
+                text,
+                variables
+            }
+            this.modal.action = action_name ;
+        },
+        modal_action(action){
+            switch (action) {
+                case 'delete':
+                    this.deleteTable();
+                break;
+            
+                default:
+                    break;
+            }
+        },
+        close_modal(){
+            this.modal.visible = false;
+            this.modal.title = '';
+            this.modal.message = {
+                text: '',
+                variables: ['']
+            }
+            this.modal.action = () => {}
+        },
         tables,
         new_quantity: 0,
         selectedQuantities: [],
-        selectedTable: selectedTable,
+        selectedTable,
         init() {
             if (selectedTable.id !== 0) return; //if there's not selectedTable on localstorage assign the first one 
             this.tables.map((table_, index) => {
@@ -145,7 +187,8 @@ document.addEventListener('alpine:init', () => {
             this.updateLocalStorage('selectedTable', this.selectedTable, { serialize: true })
             this.updateLocalStorage('tables', this.tables, { serialize: true });
         },
-        deleteTable(id) {
+        deleteTable() {
+            const id = this.selectedTable.id;
             this.tables.forEach((table_, index) => {
                 if (id === table_.id) {
                     this.tables.splice(index, 1);
@@ -155,7 +198,7 @@ document.addEventListener('alpine:init', () => {
                     this.selectTable({id, label})
                 }
             });
-            this.modal = false;
+            this.close_modal();
             this.updateLocalStorage('tables', this.tables, { serialize: true });
         },
         addTable() {

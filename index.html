@@ -18,35 +18,34 @@
 <body>
     <div class="container" x-data="store">
         <nav class="main">
-            <button @click="addTable()">
-                Añadir lista
+            <button @click="addTable()" class="add-table">
                 <i class="fa-solid fa-plus"></i>
+                Añadir lista
+            </button>
+            <button class="reset" @click="open_modal('Reiniciar aplicación', '¿Estás seguro de que deseas reiniciar la aplicación? En este caso, se <b>borrarán todos los datos que tienes almacenados </b> hasta ahora.', [''], 'reset')">
+                <i class="fa-solid fa-arrows-rotate"></i>
             </button>
         </nav>
         <!-- delete modal -->
-        <div x-show="modal" class="modal-container" x-transition.opacity x-cloak>
+        <div x-show="modal.visible" class="modal-container" x-transition.opacity x-cloak>
             <div class="modal-body">
                 <div class="header">
-                    <h4>
-                        Eliminar elemento
-                    </h4>
-                    <button type="button" class="close" @click="modal = false">
+                    <h4 x-text="modal.title"></h4>
+                    <button type="button" class="close" @click="modal.visible = false">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
                 <div class="content">
-                    <p>
-                        ¿Está seguro de que desea eliminar el contador <b x-text="selectedTable.label"></b> ?
-                    </p>
+                    <p x-html="modal.message_text()"></p>
                 </div>
                 <div class="footer">
-                    <button type="button" class="cancel-modal" @click="modal = false">
+                    <button type="button" class="cancel-modal" @click="modal.visible = false">
                         Cancelar
                     </button>
-                    <button type="button" class="accept" @click="deleteTable(selectedTable.id)">Aceptar</button>
+                    <button type="button" class="accept" @click="() => { modal_action(modal.action) }">Aceptar</button>
                 </div>
             </div>
-            <div class="modal-mask" @click="modal = false"></div>
+            <div class="modal-mask" @click="modal.visible = false"></div>
         </div>
         <main>
             <header>
@@ -67,7 +66,7 @@
                         @keydown.enter.prevent="() => { saveLabel($el) }"
                         maxlength="15"
                     >
-                    <button type="button" class="delete-table" @click="() => { modal = true }">
+                    <button type="button" class="delete-table" @click="() => { open_modal('Eliminar tabla','¿Está seguro de que desea eliminar la tabla <b>{0}</b> ?',[selectedTable.label], 'delete') }">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>
@@ -87,10 +86,11 @@
         <div class="table-sum">
             <div class="total">
                 <h4 class="label">TOTAL:</h4>
-                <h3 x-mask.numeral class="value" x-text="quantity_sum || '0'"></h3>
+                <input class="value" x-model="quantity_sum" x-mask.numeral disabled type="text">
             </div>
             <div class="new-quantity">
                 <input
+                type="text" 
                 x-ref="new_quantity"
                 x-model="new_quantity"
                 x-mask.numeral
