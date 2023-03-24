@@ -3,7 +3,7 @@
 const default_tables = [ //default values
     {   id: 1, 
         label: 'Lista #1',
-        quantities: [],
+        quantities: [0],
         editing: {
             label: false,
             quantity: false
@@ -11,14 +11,14 @@ const default_tables = [ //default values
     },
     {   id: 2,
         label: 'Lista #2',
-        quantities: [],
+        quantities: [0],
         editing: {
             label: false,
             quantity: false
         },
     },
 ]
-const selectedTable = JSON.parse(localStorage.getItem('selectedTable')) || { id: 0, editing: {label: false, quantity: false, new_quantity: false}};
+const selectedTable = JSON.parse(localStorage.getItem('selectedTable')) || { id: 0, editing: {label: false, quantity: false}};
 const tables = JSON.parse(localStorage.getItem('tables')) || default_tables;
 // new MiniBar(document.querySelector('#scroll-container'));
 
@@ -38,54 +38,53 @@ document.addEventListener('alpine:init', () => {
                 variables: ['']
             },
             message_text() {
-                this.message.variables.forEach((variable, index) => {
+                this.message.variables.forEach( (variable, index) => {
                     this.message.text = this.message.text.replace(`{${index}}`, variable);
                 });
                 return this.message.text;
             },
-            action: () => {}
+            action: '',
+            content: {
+                value: false,
+                name: ''
+            }
         },
-        open_modal(title = '', text = '', variables = [''], action_name ){
+        popup: {
+            visible: false
+        },
+        open_modal(title = '', text = '', variables = [''], action_name = '', content_modal = {value: false, name: false}){
             this.modal.visible = true;
             this.modal.title = title;
-            this.modal.message = {
-                text,
-                variables
-            }
-            this.modal.action = action_name ;
+            this.modal.message = { text, variables };
+            this.modal.action = action_name;
+            // value & name if the modal that we want is not generic.
+            this.modal.content.value = content_modal.value;
+            this.modal.content.name = content_modal.name;
         },
-        modal_action(action){
+        modal_action(action) {
             switch (action) {
                 case 'delete':
                     this.deleteTable();
                 break;
                 case 'reset':
-                    console.log('if i loose it all');
-                    localStorage.clear();
-                    this.tables = [
-                    {   id: 1, 
-                        label: 'Lista #1',
-                        quantities: [],
-                        editing: {
-                            label: false,
-                            quantity: false
-                        },
-                    },];
-                    this.close_modal();
+                    this.resetApp();
                 break;
-            
                 default:
                     break;
             }
         },
-        close_modal(){
+        close_modal() {
             this.modal.visible = false;
             this.modal.title = '';
             this.modal.message = {
                 text: '',
                 variables: ['']
             }
-            this.modal.action = () => {}
+            this.modal.action = '';
+            this.modal.content = {
+                value: false,
+                name: ''
+            };
         },
         tables,
         new_quantity: 0,
@@ -108,7 +107,17 @@ document.addEventListener('alpine:init', () => {
             });
         },
         get quantity_sum() {
-            return this.selectedTable.quantities.length ? this.selectedTable.quantities.reduce((a, b) => a + b):0;
+            const format = (value) => {
+                return (value).toLocaleString('en-US', { 
+                    style: 'currency', 
+                    currency: 'USD'
+                });;
+            }
+            if (this.selectedTable.quantities.length < 1) {
+                return format(0)
+            }
+            const sum = this.selectedTable.quantities.reduce((a, b) => a + b) || 0;
+            return format(sum);
         },
         focus_label() {
             this.timeout.focus_label = setTimeout(() => {
@@ -207,14 +216,22 @@ document.addEventListener('alpine:init', () => {
             const id = this.selectedTable.id;
             this.tables.forEach((table_, index) => {
                 if (id === table_.id) {
+                    let id_;
+                    let label_;
+                    let quantities_;
                     this.tables.splice(index, 1);
-                    if (!this.tables.length) return;
+                    if (this.tables.length) {
+                        const { id, label, quantities } = this.tables[index] || this.tables[index - 1];
+                        id_ = id;
+                        label_ = label;
+                        quantities_ = quantities;
+                    }
+                    this.selectTable({id: id_, label: label_, quantities: quantities_ || [0]})
                     // find if there is a table after / before.
-                    const { id, label } = this.tables[index] || this.tables[index - 1] 
-                    this.selectTable({id, label})
                 }
             });
             this.close_modal();
+            this.updateLocalStorage('selectedTable', this.selectedTable, { serialize: true });
             this.updateLocalStorage('tables', this.tables, { serialize: true });
         },
         addTable() {
@@ -231,7 +248,7 @@ document.addEventListener('alpine:init', () => {
             }
             this.tables.push({
                 id,
-                quantities: [],
+                quantities: [0],
                 label: '#' +  id,
                 editing: {
                     label: false,
@@ -250,16 +267,44 @@ document.addEventListener('alpine:init', () => {
                 } 
             });
         },
-        selectTable({ id, label, quantities }) {
+        selectTable({ id, label, quantities}) {
             if (this.selectedTable.id !== id) this.unSelectTable(id);
             this.tables.map((table) => {
-                if (this.selectedTable.id !== id) table.editing.quantity = false; // clean the rest
+                if (this.selectedTable.id !== id) {
+                    table.editing.quantity = false; // clean the rest
+                }
             })
             this.selectedTable.id = id; 
             this.selectedTable.label = label;
-            this.selectedTable.quantities = quantities;
+            this.selectedTable.quantities = quantities || [0];
             
             this.updateLocalStorage('selectedTable', this.selectedTable, { serialize: true });
+        },
+        resetApp() { // contingency plan
+            localStorage.clear();
+            this.tables = [
+                {   
+                    id: 1, 
+                    label: 'Lista #1',
+                    quantities: [0],
+                    editing: {
+                        label: false,
+                        quantity: false
+                    },
+                }
+            ];
+            this.selectedTable = {
+                id: 1, 
+                label: 'Lista #1',
+                quantities: [0],
+                editing: {
+                    label: false,
+                    quantity: false
+                },
+            }
+            this.updateLocalStorage('selectedTable', this.selectedTable, { serialize: true })
+            this.updateLocalStorage('tables', this.tables, { serialize: true });
+            this.close_modal();
         },
         updateLocalStorage(key, value, options = { serialize: false }){
             if (options.serialize) {

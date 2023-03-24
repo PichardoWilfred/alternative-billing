@@ -20,13 +20,28 @@
         <nav class="main">
             <button @click="addTable()" class="add-table">
                 <i class="fa-solid fa-plus"></i>
-                Añadir lista
+                Añadir tabla
             </button>
-            <button class="reset" @click="open_modal('Reiniciar aplicación', '¿Estás seguro de que deseas reiniciar la aplicación? En este caso, se <b>borrarán todos los datos que tienes almacenados </b> hasta ahora.', [''], 'reset')">
-                <i class="fa-solid fa-arrows-rotate"></i>
-            </button>
-        </nav>
-        <!-- delete modal -->
+            <div class="popup-container">
+                <button class="options" @click="() => {popup.visible = true}">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                </button>
+                <ul x-show="popup.visible" class="pop-up" @click.outside="() => {popup.visible = false}" x-transition.opacity x-cloak>
+                    <li @click="open_modal('Reiniciar aplicación', '¿Estás seguro de que deseas reiniciar la aplicación? En este caso, se <b>borrarán todos los datos que tienes almacenados </b> hasta ahora.', [''], 'reset')">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                        <span>
+                            Reiniciar aplicación
+                        </span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-sliders"></i>
+                        <span>
+                            Configuración
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </nav> <!-- delete modal -->
         <div x-show="modal.visible" class="modal-container" x-transition.opacity x-cloak>
             <div class="modal-body">
                 <div class="header">
@@ -36,7 +51,7 @@
                     </button>
                 </div>
                 <div class="content">
-                    <p x-html="modal.message_text()"></p>
+                    <p class="modal-text" x-html="modal.message_text()"></p>
                 </div>
                 <div class="footer">
                     <button type="button" class="cancel-modal" @click="modal.visible = false">
@@ -47,48 +62,56 @@
             </div>
             <div class="modal-mask" @click="modal.visible = false"></div>
         </div>
-        <main>
-            <header>
-                <ul class="table-list">
-                    <template x-for="(table, index) in tables" :key="table.id">
-                        <li :class="table.id === selectedTable.id && 'selected'" @click="() => {selectTable(table)}">
-                            <span x-text="table.label" class="text-truncate"></span>
-                        </li>
-                    </template>
-                </ul>
-            </header>
-            <div class="card">
-                <div class="card-header">
-                    <input type="text" class="table-name" 
-                        x-model="selectedTable.label"
-                        @click="() => { focus_label() }"
-                        @click.outside="() => { saveLabel($el) }"
-                        @keydown.enter.prevent="() => { saveLabel($el) }"
-                        maxlength="15"
-                    >
-                    <button type="button" class="delete-table" @click="() => { open_modal('Eliminar tabla','¿Está seguro de que desea eliminar la tabla <b>{0}</b> ?',[selectedTable.label], 'delete') }">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
+        <template x-if="tables.length >= 1">
+            <main>
+                <header>
+                    <ul class="table-list">
+                        <template x-for="(table, index) in tables" :key="table.id">
+                            <li :class="table.id === selectedTable.id && 'selected'" @click="() => {selectTable(table)}">
+                                <span x-text="table.label" class="text-truncate"></span>
+                            </li>
+                        </template>
+                    </ul>
+                </header>
+                <div class="card">
+                    <div class="card-header">
+                        <input type="text" class="table-name" 
+                            x-model="selectedTable.label"
+                            @click="() => { focus_label() }"
+                            @click.outside="() => { saveLabel($el) }"
+                            @keydown.enter.prevent="() => { saveLabel($el) }"
+                            maxlength="15"
+                        >
+                        <button type="button" class="delete-table" @click="() => { open_modal('Eliminar tabla','¿Está seguro de que desea eliminar la tabla <b>{0}</b> ?',[selectedTable.label], 'delete') }">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                    <ul class="table">
+                        <template x-for="(quantity, index) in selectedTable.quantities" :key="index">
+                            <li class="quantity" @click.outside="() => { saveQuantity('unfocused', index, $el) }" @click="() => { focus_quantity(index) }" > 
+                                <input :id="`input-quantity-${index}`" class="quantity" 
+                                    x-model="quantity"
+                                    x-mask.numeral
+                                    @keydown.enter.prevent="saveQuantity('enter', index, $el)"
+                                    :disabled="index !== selectedTable.editing.quantity">
+                            </li>
+                        </template>                        
+                    </ul>
                 </div>
-                <ul class="table">
-                    <template x-for="(quantity, index) in selectedTable.quantities" :key="index">
-                        <li class="quantity" @click.outside="() => { saveQuantity('unfocused', index, $el) }" @click="() => { focus_quantity(index) }" > 
-                            <input :id="`input-quantity-${index}`" class="quantity" 
-                                x-model="quantity"
-                                x-mask.numeral
-                                @keydown.enter.prevent="saveQuantity('enter', index, $el)"
-                                :disabled="index !== selectedTable.editing.quantity">
-                        </li>
-                    </template>                        
-                </ul>
-            </div>
-        </main>
+            </main>
+        </template>
+        <template x-if="tables.length === 0">
+            <main class="not-found">
+                <img src="assets/not-found-alt-bill.svg" class="not-found-img" alt="" srcset="">
+                <h4>No pudimos encontrar ninguna tabla en esta sesión.</h4>
+            </main>
+        </template>
         <div class="table-sum">
             <div class="total">
                 <h4 class="label">TOTAL:</h4>
-                <input class="value" x-model="quantity_sum" x-mask.numeral disabled type="text">
+                <h3 class="value" x-text="quantity_sum"></h3>
             </div>
-            <div class="new-quantity">
+            <div class="new-quantity" :class="tables.length === 0 && 'disabled'">
                 <input
                 type="text" 
                 x-ref="new_quantity"
