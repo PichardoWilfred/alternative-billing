@@ -59,6 +59,20 @@ document.addEventListener('alpine:init', () => {
                 case 'delete':
                     this.deleteTable();
                 break;
+                case 'reset':
+                    console.log('if i loose it all');
+                    localStorage.clear();
+                    this.tables = [
+                    {   id: 1, 
+                        label: 'Lista #1',
+                        quantities: [],
+                        editing: {
+                            label: false,
+                            quantity: false
+                        },
+                    },];
+                    this.close_modal();
+                break;
             
                 default:
                     break;
@@ -136,8 +150,10 @@ document.addEventListener('alpine:init', () => {
         saveNewQuantity(element) {
             const quantity = element.value;
             const new_label = quantity.replace(/\s+/g, ' ').trim();
-            if (new_label) {
+            if (new_label && new_label > 0) {
                 this.updateTable({ type: 'new_quantity', new_quantity: this.new_quantity, el: element}); //save label
+            }else {
+                return;
             }
             
         },
