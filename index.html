@@ -88,16 +88,22 @@
                     </div>
                     <ul class="table">
                         <template x-for="(quantity, index) in selectedTable.quantities" :key="index">
-                            <li class="quantity" @click.outside="() => { saveQuantity('unfocused', index, $el) }" @click="() => { focus_quantity(index) }" > 
+                            <li class="quantity" @click.outside="() => { saveQuantity('unfocused', index, $el) }" > 
                                 <input :id="`quantity-name-${index}`" class="name"
                                 type="text"
                                 x-model="quantity.name"
+                                @click="() => { focus_quantity(index, 'name') }"
+                                @keydown.enter.prevent="saveQuantity('enter', index, $el)"
+                                
                                 >
                                 <input :id="`quantity-value-${index}`" class="value" 
-                                    x-model="quantity.value"
-                                    x-mask.numeral
-                                    @keydown.enter.prevent="saveQuantity('enter', index, $el)"
-                                    :disabled="index !== selectedTable.editing.quantity">
+                                type="text"
+                                x-model="quantity.value"
+                                @click="() => { focus_quantity(index, 'value') }"
+                                x-mask.numeral
+                                @keydown.enter.prevent="saveQuantity('enter', index, $el)"
+                                
+                                >
                             </li>
                         </template>                        
                     </ul>
