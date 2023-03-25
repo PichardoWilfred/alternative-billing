@@ -3,7 +3,9 @@
 const default_tables = [ //default values
     {   id: 1, 
         label: 'Lista #1',
-        quantities: [0],
+        quantities: [
+            { name: '',  value: 0 }
+        ],
         editing: {
             label: false,
             quantity: false
@@ -11,7 +13,9 @@ const default_tables = [ //default values
     },
     {   id: 2,
         label: 'Lista #2',
-        quantities: [0],
+        quantities: [
+            { name: '',  value: 0 }
+        ],
         editing: {
             label: false,
             quantity: false
@@ -20,7 +24,6 @@ const default_tables = [ //default values
 ]
 const selectedTable = JSON.parse(localStorage.getItem('selectedTable')) || { id: 0, editing: {label: false, quantity: false}};
 const tables = JSON.parse(localStorage.getItem('tables')) || default_tables;
-// new MiniBar(document.querySelector('#scroll-container'));
 
 document.addEventListener('alpine:init', () => {
     Alpine.data('store', () => ({
@@ -88,7 +91,6 @@ document.addEventListener('alpine:init', () => {
         },
         tables,
         new_quantity: 0,
-        selectedQuantities: [],
         selectedTable,
         init() {
             if (selectedTable.id !== 0) return; //if there's not selectedTable on localstorage assign the first one 
@@ -106,9 +108,9 @@ document.addEventListener('alpine:init', () => {
                 }
             });
         },
-        get quantity_sum() {
+        get total() {
             const format = (value) => {
-                return (value).toLocaleString('en-US', { 
+                return (value).toLocaleString('en-US', {
                     style: 'currency', 
                     currency: 'USD'
                 });;
@@ -116,7 +118,10 @@ document.addEventListener('alpine:init', () => {
             if (this.selectedTable.quantities.length < 1) {
                 return format(0)
             }
-            const sum = this.selectedTable.quantities.reduce((a, b) => a + b) || 0;
+            let sum = 0;
+            this.selectedTable.quantities.forEach((quantity) => {
+                sum += quantity.value * 1;
+            });
             return format(sum);
         },
         focus_label() {
@@ -132,7 +137,7 @@ document.addEventListener('alpine:init', () => {
             this.timeout.focus_quantity = setTimeout(() => { // we need to make this function to enter after our .outside handler (saveQuantity)
                 if (this.selectedTable.editing.quantity === index) return; // ignore if we select the same one
                 this.selectedTable.editing.quantity = index;
-                const input = document.querySelector(`#input-quantity-${index}`);
+                const input = document.querySelector(`#quantity-value-${index}`);
                 this.timeout.quantity = setTimeout(() => {
                     input.focus();
                 }, 0);
@@ -161,10 +166,7 @@ document.addEventListener('alpine:init', () => {
             const new_label = quantity.replace(/\s+/g, ' ').trim();
             if (new_label && new_label > 0) {
                 this.updateTable({ type: 'new_quantity', new_quantity: this.new_quantity, el: element}); //save label
-            }else {
-                return;
             }
-            
         },
         saveQuantity(action, index, element) {
             if (this.selectedTable.editing.quantity !== index) return; //validating that only the selected will be triggered
@@ -173,11 +175,11 @@ document.addEventListener('alpine:init', () => {
             let new_quantity;
             // we need this in case the user clicks on a different tab.
             if (action === 'unfocused') {
-                const input = element.querySelector('input');
+                const input = element.querySelector('input.value');
                 new_quantity = input.value;
             }
             if (action === 'enter') new_quantity = element.value;
-            this.updateTable({new_quantity, index: index_editing, type: 'quantity'});
+            this.updateTable({type: 'quantity', new_quantity, index: index_editing});
         },
         // new_quantity = 0, index = 0, action
         updateTable(action) {
@@ -190,18 +192,17 @@ document.addEventListener('alpine:init', () => {
 
                 if (table.id === this.selectedTable.id) {  // updating the specific quantity
                     if (action.type === 'quantity') {
-                        if ( action.new_quantity * 1 <= 0) {
-                            table.quantities.splice(action.index, 1);
-                        }else {
-                            table.quantities[action.index] = action.new_quantity.replace(/\D/g,'') * 1;
-                        }
+                        // if ( action.new_quantity * 1 <= 0) { }else { }
+                        // table.quantities.splice(action.index, 1); // (delete)
+                        table.quantities[action.index] = { name: '', value: action.new_quantity.replace(/\D/g,'') * 1 };
                         this.selectedTable.quantities = table.quantities;
                     }
                     if (action.type === 'label' && last_edited) {
                         table.label = action.new_label;
                     }
                     if (action.type === 'new_quantity') {
-                        table.quantities.push(action.new_quantity.replace(/\D/g,'') * 1);
+                        const name = table.quantities.length + '';
+                        table.quantities.push({ name, value: action.new_quantity.replace(/\D/g,'') * 1});
                         this.selectedTable.quantities = table.quantities;
                         this.new_quantity = 0;
                         action.el.focus();
@@ -226,8 +227,11 @@ document.addEventListener('alpine:init', () => {
                         label_ = label;
                         quantities_ = quantities;
                     }
-                    this.selectTable({id: id_, label: label_, quantities: quantities_ || [0]})
-                    // find if there is a table after / before.
+                    this.selectTable({ // find if there is a table after / before.
+                        id: id_, 
+                        label: label_, 
+                        quantities: quantities_ || [{ name: '', value: 0}]
+                    });
                 }
             });
             this.close_modal();
@@ -248,7 +252,7 @@ document.addEventListener('alpine:init', () => {
             }
             this.tables.push({
                 id,
-                quantities: [0],
+                quantities: [{ name: '', value: 0}],
                 label: '#' +  id,
                 editing: {
                     label: false,
@@ -286,7 +290,7 @@ document.addEventListener('alpine:init', () => {
                 {   
                     id: 1, 
                     label: 'Lista #1',
-                    quantities: [0],
+                    quantities: [{ name: '', value: 0}],
                     editing: {
                         label: false,
                         quantity: false
@@ -296,7 +300,7 @@ document.addEventListener('alpine:init', () => {
             this.selectedTable = {
                 id: 1, 
                 label: 'Lista #1',
-                quantities: [0],
+                quantities: [{ name: '', value: 0}],
                 editing: {
                     label: false,
                     quantity: false

@@ -89,8 +89,12 @@
                     <ul class="table">
                         <template x-for="(quantity, index) in selectedTable.quantities" :key="index">
                             <li class="quantity" @click.outside="() => { saveQuantity('unfocused', index, $el) }" @click="() => { focus_quantity(index) }" > 
-                                <input :id="`input-quantity-${index}`" class="quantity" 
-                                    x-model="quantity"
+                                <input :id="`quantity-name-${index}`" class="name"
+                                type="text"
+                                x-model="quantity.name"
+                                >
+                                <input :id="`quantity-value-${index}`" class="value" 
+                                    x-model="quantity.value"
                                     x-mask.numeral
                                     @keydown.enter.prevent="saveQuantity('enter', index, $el)"
                                     :disabled="index !== selectedTable.editing.quantity">
@@ -109,7 +113,7 @@
         <div class="table-sum">
             <div class="total">
                 <h4 class="label">TOTAL:</h4>
-                <h3 class="value" x-text="quantity_sum"></h3>
+                <h3 class="value" x-text="total"></h3>
             </div>
             <div class="new-quantity" :class="tables.length === 0 && 'disabled'">
                 <input
