@@ -140,7 +140,6 @@ document.addEventListener('alpine:init', () => {
                 const input_ = document.querySelector(`#quantity-${input}-${index}`);
                 this.timeout.quantity = setTimeout(() => {
                     input_.focus();
-
                 }, 0);
             }, 0);
         },
@@ -164,7 +163,7 @@ document.addEventListener('alpine:init', () => {
         },
         saveNewQuantity(element) {
             const quantity = element.value;
-            const new_label = quantity.replace(/\s+/g, ' ').trim();
+            const new_label = quantity.replace(/,+/g,'').replace(/\s+/g, ' ').trim();
             if (new_label && new_label > 0) {
                 this.updateTable({ type: 'new_quantity', new_quantity: this.new_quantity, el: element}); //save label
             }
@@ -172,7 +171,7 @@ document.addEventListener('alpine:init', () => {
         saveQuantity(action, index, element) { // (we need to specify which one of the inputs we are focusing...)            
             if (this.selectedTable.editing.quantity.index !== index) return; //validating that only the selected will be triggered
             const index_editing = this.selectedTable.editing.quantity.index;
-            // this.selectedTable.editing.quantity = { index: null, input: null };
+            this.selectedTable.editing.quantity = { index: null, input: null };
             let updated_quantity;
 
             // we need this in case the user clicks on a different tab.
@@ -187,7 +186,7 @@ document.addEventListener('alpine:init', () => {
                 const name = li.querySelector('input.name');
                 updated_quantity = { value: value.value, name: name.value };
             };
-            
+
             this.updateTable({type: 'quantity', updated_quantity, index: index_editing});
         },
         // new_quantity = 0, index = 0, action
@@ -261,7 +260,7 @@ document.addEventListener('alpine:init', () => {
             }
             this.tables.push({
                 id,
-                quantities: [{ name: '', value: 0}],
+                quantities: [{ name: 'Item #1', value: 0}],
                 label: '#' +  id,
                 editing: {
                     label: false,

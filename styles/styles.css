@@ -53,10 +53,10 @@ div.container {
     justify-content: space-between;
     color: #090909;
     font-weight: 700;
+    margin-bottom: 6px;
 }
 .modal-container .modal-body .header h4 {
     margin-top: .5rem;
-    margin-left: .5rem;
     font-size: 22px;
 }
 .modal-container .modal-body .header button {
@@ -76,8 +76,8 @@ div.container {
 }
 .modal-container .modal-body .content p.modal-text {
     margin-top: .5rem 0 20px .5rem;
-    font-weight: 500;    
-    line-height: 1.3;
+    font-weight: 500;
+    line-height: 1.4;
 }
 .modal-container .modal-body .content b {
     font-weight: 600;   
@@ -85,6 +85,7 @@ div.container {
 .modal-container .modal-body .footer {
     display: flex;
     justify-content: end;
+    margin-top: 12px;
 }
 .modal-container .modal-body .footer button {
     font-weight: 600;
