@@ -139,7 +139,8 @@ document.addEventListener('alpine:init', () => {
                 this.selectedTable.editing.quantity = {index, input};
                 const input_ = document.querySelector(`#quantity-${input}-${index}`);
                 this.timeout.quantity = setTimeout(() => {
-                    input_.focus()   ;
+                    input_.focus();
+
                 }, 0);
             }, 0);
         },
@@ -170,8 +171,8 @@ document.addEventListener('alpine:init', () => {
         },
         saveQuantity(action, index, element) { // (we need to specify which one of the inputs we are focusing...)            
             if (this.selectedTable.editing.quantity.index !== index) return; //validating that only the selected will be triggered
-            const index_editing = this.selectedTable.editing.quantity;
-            this.selectedTable.editing.quantity = false;
+            const index_editing = this.selectedTable.editing.quantity.index;
+            // this.selectedTable.editing.quantity = { index: null, input: null };
             let updated_quantity;
 
             // we need this in case the user clicks on a different tab.
@@ -186,7 +187,7 @@ document.addEventListener('alpine:init', () => {
                 const name = li.querySelector('input.name');
                 updated_quantity = { value: value.value, name: name.value };
             };
-            // console.log({type: 'quantity', updated_quantity, index: index_editing});
+            
             this.updateTable({type: 'quantity', updated_quantity, index: index_editing});
         },
         // new_quantity = 0, index = 0, action
@@ -218,7 +219,6 @@ document.addEventListener('alpine:init', () => {
                 }
                 // }
             });
-            
             this.updateLocalStorage('selectedTable', this.selectedTable, { serialize: true })
             this.updateLocalStorage('tables', this.tables, { serialize: true });
         },
@@ -277,14 +277,14 @@ document.addEventListener('alpine:init', () => {
                 if (table.id === id) {
                     table.editing.label = false;
                     table.editing.quantity = {index: null, input: null};
-                } 
+                }
             });
         },
         selectTable({ id, label, quantities}) {
             if (this.selectedTable.id !== id) this.unSelectTable(id);
             this.tables.map((table) => {
                 if (this.selectedTable.id !== id) {
-                    table.editing.quantity = false; // clean the rest
+                    table.editing.quantity = {index: null, input: null}; // clean the rest
                 }
             })
             this.selectedTable.id = id; 

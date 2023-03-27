@@ -223,10 +223,6 @@ main.not-found h4 {
     text-align: center;
 }
 
-:root {
-    --transition-1: all 0.15s ease-in-out;
-}
-
 .form-group {
     display: flex;
     justify-content: space-between;
@@ -378,14 +374,21 @@ ul.table li.quantity {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    
+    padding-block: 6px;
+    padding-right: 30px;
+    padding-left: 20px;
 
-    padding: 12px 30px 12px 20px; 
     cursor: pointer;
     transition: all 0.1s ease-in-out;
 }
 ul.table li.quantity:is(:hover, :active) {
     background-color: #0000000D;
 }
+ul.table li.quantity:is(:hover, :active) input.value{
+    border-color:#e1e1e1;
+}
+
 ul.table li.selected::before {
     content: '';
     position: absolute;
@@ -406,19 +409,28 @@ ul.table li span {
 ul.table li input:is(.value, .name) {
     display: flex;
     text-align: start;
-    height: 20px;
+    
+    padding-block: 4px;
+    padding-left: 12px;
+
     font-weight: 600;
     font-size: 20px;
+    
     border: 0;
+    border-radius: 6px;
+    
     background-color: transparent;
+    
     cursor: pointer;
     transition: all 0.15s ease-in-out;
 }
 ul.table li input.name {
-    width: 60%;
+    width: 70%;
 }
 ul.table li input.value {
-    width: 40%;
+    width: 30%;
+    border: 2px solid #F4F4F4;
+    background-color: #F4F4F4;
 }
 ul.table li input:is(.value, .name):disabled {
     opacity: 1; /* required on iOS */
@@ -427,7 +439,6 @@ ul.table li input:is(.value, .name):disabled {
     pointer-events: none;
     transition: all 0.15s ease-in-out;
 }
-
 
 #scroll-container.not-found .not-found {
     text-align: center;
