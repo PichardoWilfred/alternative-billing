@@ -75,7 +75,7 @@ div.container {
     background-color: #f1f0f0;
 }
 .modal-container .modal-body .content p.modal-text {
-    margin-top: .5rem 0 20px .5rem;
+    margin: .5rem 0 12px 0;
     font-weight: 500;
     line-height: 1.4;
 }
@@ -141,12 +141,12 @@ nav.main button.add-table i {
 }
 nav.main .popup-container {
     position: relative;
-
 }
 nav.main button.options {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: transparent;
 
     font-size: 20px;
     font-weight: 600;
@@ -157,6 +157,14 @@ nav.main button.options {
     width: 35px;
 
     border-radius: 100vmax;
+}
+
+nav.main button.options:is(:hover, :active) {
+    background-color: #353535;
+}
+nav.main button.options i {
+    background-color: transparent;
+    color: white;
 }
 
 nav.main .popup-container ul.pop-up {
@@ -260,7 +268,6 @@ header {
 header ul.table-list {
     display: flex;
     overflow-x: scroll;
-    border-bottom: 1px solid #D9D9D9;
 }
 header ul.table-list li {
     white-space: nowrap;
@@ -313,9 +320,9 @@ header ul.table-list li.selected::after {
 .card-header {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
-    padding: 0 20px 16px 20px;
-    border-bottom: 2px solid #090909;
+    padding: 20px 20px 16px 20px;
+    border-top: 1px solid #D9D9D9;
+    border-bottom: 2px solid #D9D9D9;
 }
 .card-header input.table-name {
     border: 2px solid #e1e1e1;
@@ -357,7 +364,8 @@ ul.table {
     overflow-y: scroll;
 
     background-color: white;
-    box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+    /* box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset; */
+    z-index: 3;
 }
 
 @keyframes select-table {
@@ -535,6 +543,7 @@ ul.table li input:is(.value, .name):disabled {
 }
 
 .new-quantity button {
+    background-color: #090909;
     font-size: 15px;
     flex-grow: 0;
 }

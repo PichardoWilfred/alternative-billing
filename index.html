@@ -24,7 +24,7 @@
             </button>
             <div class="popup-container">
                 <button class="options" @click="() => {popup.visible = true}">
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                    <i class="fa-solid fa-gear"></i>
                 </button>
                 <ul x-show="popup.visible" class="pop-up" @click.outside="() => {popup.visible = false}" x-transition.opacity x-cloak>
                     <li @click="open_modal('Reiniciar aplicación', '¿Estás seguro de que deseas reiniciar la aplicación? En este caso, se <b>borrarán todos los datos que tienes almacenados </b> hasta ahora.', [''], 'reset')">
