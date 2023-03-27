@@ -137,7 +137,7 @@ document.addEventListener('alpine:init', () => {
             this.timeout.focus_quantity = setTimeout(() => { // we need to make this function to enter after our .outside handler (saveQuantity)
                 if (this.selectedTable.editing.quantity.index === index) return; // ignore if we select the same one
                 this.selectedTable.editing.quantity = {index, input};
-                const input_ = document.querySelector(`#quantity-${value}-${index}`);
+                const input_ = document.querySelector(`#quantity-${input}-${index}`);
                 this.timeout.quantity = setTimeout(() => {
                     input_.focus()   ;
                 }, 0);
@@ -186,8 +186,8 @@ document.addEventListener('alpine:init', () => {
                 const name = li.querySelector('input.name');
                 updated_quantity = { value: value.value, name: name.value };
             };
-            console.log({type: 'quantity', updated_quantity, index: index_editing});
-            // this.updateTable({type: 'quantity', updated_quantity, index: index_editing});
+            // console.log({type: 'quantity', updated_quantity, index: index_editing});
+            this.updateTable({type: 'quantity', updated_quantity, index: index_editing});
         },
         // new_quantity = 0, index = 0, action
         updateTable(action) {
@@ -199,9 +199,11 @@ document.addEventListener('alpine:init', () => {
                 }
                 if (table.id !== this.selectedTable.id) return;  // updating the specific quantity
                 if (action.type === 'quantity') {
+                    const { name, value} = action.updated_quantity;
+                    // console.log(value.replace(/\D/g,'') * 1);
                     // if ( action.new_quantity * 1 <= 0) { }else { }
                     // table.quantities.splice(action.index, 1); // (delete)
-                    table.quantities[action.index] = { name: `Item #${action.index}`, value: action.new_quantity.replace(/\D/g,'') * 1 };
+                    table.quantities[action.index] = { name: name, value: value.replace(/\D/g,'') * 1 };
                     this.selectedTable.quantities = table.quantities;
                 }
                 if (action.type === 'label' && last_edited) {
