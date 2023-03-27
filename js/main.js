@@ -191,25 +191,26 @@ document.addEventListener('alpine:init', () => {
                     last_edited = table;
                     table.editing.label = false;
                 }
-
-                if (table.id === this.selectedTable.id) {  // updating the specific quantity
-                    if (action.type === 'quantity') {
-                        // if ( action.new_quantity * 1 <= 0) { }else { }
-                        // table.quantities.splice(action.index, 1); // (delete)
-                        table.quantities[action.index] = { name: '', value: action.new_quantity.replace(/\D/g,'') * 1 };
-                        this.selectedTable.quantities = table.quantities;
-                    }
-                    if (action.type === 'label' && last_edited) {
-                        table.label = action.new_label;
-                    }
-                    if (action.type === 'new_quantity') {
-                        const name = table.quantities.length + '';
-                        table.quantities.push({ name, value: action.new_quantity.replace(/\D/g,'') * 1});
-                        this.selectedTable.quantities = table.quantities;
-                        this.new_quantity = 0;
-                        action.el.focus();
-                    }
+                if (table.id !== this.selectedTable.id) return;  // updating the specific quantity
+                if (action.type === 'quantity') {
+                    const {name, value} = action.updated_quantity;
+                    // console.log(value.replace(/\D/g,'') * 1);
+                    // if ( action.new_quantity * 1 <= 0) { }else { }
+                    // table.quantities.splice(action.index, 1); // (delete)
+                    table.quantities[action.index] = { name, value: value.replace(/\D/g,'') * 1 };
+                    this.selectedTable.quantities = table.quantities;
                 }
+                if (action.type === 'label' && last_edited) {
+                    table.label = action.new_label;
+                }
+                if (action.type === 'new_quantity') {
+                    const name = `Item #${table.quantities.length + 1}`;
+                    table.quantities.push({ name, value: action.new_quantity.replace(/\D/g,'') * 1 });
+                    this.selectedTable.quantities = table.quantities;
+                    this.new_quantity = 0;
+                    action.el.focus();
+                }
+                // }
             });
             
             this.updateLocalStorage('selectedTable', this.selectedTable, { serialize: true })
@@ -242,26 +243,26 @@ document.addEventListener('alpine:init', () => {
         },
         addTable() {
             let id;
+            const new_table = {
+                quantities: [{ name: 'Item #1', value: 0 }],
+                editing: {
+                    label: false,
+                    quantity: {index: null, input: null},
+                    new_quantity: false,
+                },
+            }
             if (!this.tables.length) {
                 id = 1;
-                this.selectTable({id, label: '#' +  id})
+                this.tables.push({ id, label: `Lista #${id}`, ...new_table });
+                this.selectTable({ id, label: `Lista #${id}`, ...new_table });
             }else {
                 if (this.tables[this.tables.length + 1]) {
                     id = this.tables[this.tables.length + 1].id + 1
                 }else {
                     id = this.tables[this.tables.length - 1].id + 1
                 }
+                this.tables.push({ id, label: `Lista #${id}`, ...new_table });
             }
-            this.tables.push({
-                id,
-                quantities: [{ name: '', value: 0}],
-                label: '#' +  id,
-                editing: {
-                    label: false,
-                    quantity: {index: null, input: null},
-                    new_quantity: false,
-                },
-            });
             this.updateLocalStorage('tables', this.tables, { serialize: true });
         },
         // everytime that we select a different table its editing value will be set to false, (watcher)
@@ -289,23 +290,23 @@ document.addEventListener('alpine:init', () => {
         resetApp() { // contingency plan
             localStorage.clear();
             this.tables = [
-                {   
+                {
                     id: 1, 
                     label: 'Lista #1',
-                    quantities: [{ name: '', value: 0}],
+                    quantities: [{ name: 'Item #1', value: 0}],
                     editing: {
                         label: false,
-                        quantity: {index: null, input: null}
+                        quantity: { index: null, input: null }
                     },
                 }
             ];
             this.selectedTable = {
-                id: 1, 
+                id: 1,
                 label: 'Lista #1',
-                quantities: [{ name: '', value: 0}],
+                quantities: [{ name: 'Item #1', value: 0}],
                 editing: {
                     label: false,
-                    quantity: {index: null, input: null}
+                    quantity: { index: null, input: null }
                 },
             }
             this.updateLocalStorage('selectedTable', this.selectedTable, { serialize: true })
