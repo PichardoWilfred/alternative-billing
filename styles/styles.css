@@ -371,7 +371,7 @@ ul.table {
 @keyframes select-table {
     from {
         background-color: #f3f3f3;
-    } 
+    }
     to {
         background-color: white;
     }
@@ -389,23 +389,24 @@ ul.table li.quantity {
     padding-left: 20px;
 
     cursor: pointer;
-    transition: all 0.1s ease-in-out;
+    transition: background-color 0.1s ease-in-out;
 }
-ul.table li.quantity:is(:hover, :active) {
+ul.table li.quantity:is(:hover, :active, .selected ) {
     background-color: #0000000D;
 }
 ul.table li.quantity:is(:hover, :active) input.value{
     border-color:#e1e1e1;
 }
 
-ul.table li.selected::before {
-    content: '';
+ul.table li {
+    /* background-color: #0000000D; */
+    /* content: '';
     position: absolute;
     left: 24px;
     border-radius: 3rem;
     width: 8px;
     height: 8px;
-    background-color: #090909;
+    background-color: #090909; */
 }
 ul.table li:not(:last-child){
     border-bottom: 1px solid #DFDFDF;
@@ -483,7 +484,7 @@ ul.table li input:is(.value, .name):disabled {
 }
 
 .table-sum .total {
-    margin-right: auto;
+    margin-left: auto;
     text-align: start;
 }
 
@@ -492,10 +493,13 @@ ul.table li input:is(.value, .name):disabled {
     font-weight: 600;
     color:#C9C9C9;
     text-transform: uppercase;
+    text-align: right;
     margin-bottom: 3px;
 }
 .table-sum .total h3.value {
     display: flex;
+    justify-content: end;
+    text-align: end;
     width: 100%;
     font-weight: 700;
     font-size: 26px;

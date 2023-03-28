@@ -32,6 +32,7 @@ document.addEventListener('alpine:init', () => {
             focus_quantity: 0,
             focus_new_quantity: 0,
             focus_label: 0,
+            hold_click: 0,
         },
         modal: {
             visible: false,
@@ -109,20 +110,20 @@ document.addEventListener('alpine:init', () => {
             });
         },
         get total() {
-            const format = (value) => {
-                return (value).toLocaleString('en-US', {
-                    style: 'currency', 
-                    currency: 'USD'
-                });;
-            }
+            // const format = (value) => {
+            //     return (value).toLocaleString('en-US', {
+            //         style: 'currency', 
+            //         currency: 'USD'
+            //     });;
+            // }
             if (this.selectedTable.quantities.length < 1) {
-                return format(0)
+                return 0
             }
             let sum = 0;
             this.selectedTable.quantities.forEach((quantity) => {
                 sum += quantity.value * 1;
             });
-            return format(sum);
+            return sum;
         },
         focus_label() {
             this.timeout.focus_label = setTimeout(() => {
@@ -169,7 +170,7 @@ document.addEventListener('alpine:init', () => {
             }
         },
         saveQuantity(action, index, element) { // (we need to specify which one of the inputs we are focusing...)            
-            if (this.selectedTable.editing.quantity.index !== index) return; //validating that only the selected will be triggered
+            if (this.selectedTable.editing.quantity.index !== index || this.select_mode) return; //validating that only the selected will be triggered
             const index_editing = this.selectedTable.editing.quantity.index;
             this.selectedTable.editing.quantity = { index: null, input: null };
             let updated_quantity;
@@ -318,6 +319,38 @@ document.addEventListener('alpine:init', () => {
             this.updateLocalStorage('tables', this.tables, { serialize: true });
             this.close_modal();
         },
+        // select mode values
+        select_mode: false,
+        selected_quantities: [],
+        enable_select(selected) {
+            this.timeout.hold_click = setTimeout(() => {
+                this.select_mode = true;
+                this.selected_quantities.push(selected);
+            }, 800);
+        },
+        cancel_select() {
+            clearTimeout(this.timeout.hold_click);
+        },
+        is_selected(index) {
+            return this.selected_quantities.indexOf(index) !== -1;
+        },
+        unselect_all() {
+            console.log('me quité');
+            this.select_mode = false;
+            this.selected_quantities = [];
+        },
+        toggle_select(index) {
+            if (!this.select_mode) return; //action only if we are selecting
+            if (!this.selected_quantities.length) this.unselect_all();
+            
+            if (this.is_selected(index)) { // unselect
+                this.selected_quantities.splice(index, 1)
+            }else { // select
+                this.selected_quantities.push(index);
+            }
+            
+        },
+        //
         updateLocalStorage(key, value, options = { serialize: false }){
             if (options.serialize) {
                 localStorage.setItem(key, JSON.stringify(value))                

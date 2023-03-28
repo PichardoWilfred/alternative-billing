@@ -86,24 +86,31 @@
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </div>
-                    <ul class="table">
+                    <ul class="table" @click.outside="() => { unselect_all() }">
                         <template x-for="(quantity, index) in selectedTable.quantities" :key="index">
-                            <li class="quantity" @click.outside="() => { saveQuantity('unfocused', index, $el) }" > 
+                            <li class="quantity" 
+                                @click.outside="() => { saveQuantity('unfocused', index, $el); }"
+                                :class="is_selected(index) && 'selected'"
+                                @mousedown="enable_select(index)" @touchstart="enable_select(index)"
+                                @mouseup="cancel_select" @mouseleave="cancel_select" 
+                                @touchend="cancel_select"
+                                @click="toggle_select(index)">
+
                                 <input :id="`quantity-name-${index}`" class="name"
                                 type="text"
                                 x-model="quantity.name"
                                 @click="() => { focus_quantity(index, 'name') }"
-                                @keydown.enter.prevent="saveQuantity('enter', index, $el)"
                                 
-                                >
-                                <input :id="`quantity-value-${index}`" class="value" 
-                                type="text"
-                                x-model="quantity.value"
-                                @click="() => { focus_quantity(index, 'value') }"
-                                x-mask.numeral
                                 @keydown.enter.prevent="saveQuantity('enter', index, $el)"
-                                
                                 >
+                                <template x-if="!select_mode">
+                                    <input :id="`quantity-value-${index}`" class="value"
+                                    type="number"
+                                    x-model="quantity.value"
+                                    @click="() => { focus_quantity(index, 'value') }"
+                                    @keydown.enter.prevent="saveQuantity('enter', index, $el)"
+                                    >
+                                </template>
                             </li>
                         </template>                        
                     </ul>
