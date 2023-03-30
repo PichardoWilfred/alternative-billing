@@ -335,20 +335,25 @@ document.addEventListener('alpine:init', () => {
             return this.selected_quantities.indexOf(index) !== -1;
         },
         unselect_all() {
-            console.log('me quité');
             this.select_mode = false;
             this.selected_quantities = [];
         },
         toggle_select(index) {
             if (!this.select_mode) return; //action only if we are selecting
             if (!this.selected_quantities.length) this.unselect_all();
-            
+
+            // if (this.selected_quantities.length) { }
+            console.log(index);
             if (this.is_selected(index)) { // unselect
-                this.selected_quantities.splice(index, 1)
+                console.log('remove');
+                // console.log(real_index);
+                this.selected_quantities.splice(real_index, 1);
             }else { // select
+                console.log('add');
                 this.selected_quantities.push(index);
             }
-            
+
+            console.log(this.selected_quantities);
         },
         //
         updateLocalStorage(key, value, options = { serialize: false }){

@@ -1,0 +1,24 @@
+{
+  "name": "alternative-billing",
+  "version": "1.0.0",
+  "description": "alternative-billing-app",
+  "main": "index.js",
+  "scripts": {
+    "test:chrome": "npx playwright test --headed --browser=chromium",
+    "test:firefox": "npx playwright test --headed --browser=firefox",
+    "test:safari": "npx playwright test --headed --browser=webkit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PichardoWilfred/gersons-App.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PichardoWilfred/gersons-App/issues"
+  },
+  "homepage": "https://github.com/PichardoWilfred/gersons-App#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.32.1"
+  }
+}
