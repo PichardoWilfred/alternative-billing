@@ -138,11 +138,11 @@ document.addEventListener('alpine:init', () => {
         },
         focus_quantity(index, input) {
             this.timeout.focus_quantity = setTimeout(() => { // we need to make this function to enter after our .outside handler (saveQuantity)
-                if (this.selectedTable.editing.quantity === index) return; // ignore if we select the same one
-                this.selectedTable.editing.quantity = index;
-                const input_ = document.querySelector(`#quantity-value-${index}`);
+                if (this.selectedTable.editing.quantity.index === index) return; // ignore if we select the same one
+                this.selectedTable.editing.quantity = {index, input};
+                const input_ = document.querySelector(`#quantity-${input}-${index}`);
                 this.timeout.quantity = setTimeout(() => {
-                    input_.focus();
+                    input_.focus()   ;
                 }, 0);
             }, 0);
         },
@@ -172,7 +172,8 @@ document.addEventListener('alpine:init', () => {
             }
         },
         saveQuantity(action, index, element) { // (we need to specify which one of the inputs we are focusing...)            
-            if (this.selectedTable.editing.quantity.index !== index || this.select_mode) return; //validating that only the selected will be triggered
+            if (this.selectedTable.editing.quantity.index !== index ) return; //validating that only the selected will be triggered
+            console.log('PASSING');
             const index_editing = this.selectedTable.editing.quantity.index;
             this.selectedTable.editing.quantity = { index: null, input: null };
             let updated_quantity;
@@ -183,7 +184,9 @@ document.addEventListener('alpine:init', () => {
                 updated_quantity = { value: value.value, name: name.value };
             }
             if (action === 'enter') updated_quantity = element.value;
-            this.updateTable({type: 'quantity', updated_quantity, index: index_editing});
+            console.log('are we saving quantity?');
+            console.log({type: 'quantity', updated_quantity, index: index_editing});
+            this.updateTable({type: 'update_quantity', updated_quantity, index: index_editing});
         },
         // new_quantity = 0, index = 0, action
         updateTable(action) {
@@ -209,7 +212,14 @@ document.addEventListener('alpine:init', () => {
                 }
                 if (action.type === 'new_quantity') {
                     const name = `Item #${ table.quantities.length + 1 }`;
+                    console.log('previous quantities');
+                    console.log(table.quantities);
                     table.quantities.push({ name, value: action.new_quantity.replace(/\D/g,'') * 1 });
+                    console.log('new quantity:\n');
+                    console.log({ name, value: action.new_quantity.replace(/\D/g,'') * 1 });
+                    console.log('table quantities:\n');
+                    console.log(table.quantities);
+
                     this.selectedTable.quantities = table.quantities;
                     this.new_quantity = 0;
                     action.el.focus();
@@ -217,7 +227,6 @@ document.addEventListener('alpine:init', () => {
             });
             this.updateLocalStorage('selectedTable', this.selectedTable, { serialize: true })
             this.updateLocalStorage('tables', this.tables, { serialize: true });
-            console.log('');
         },
         deleteTable() {
             const id = this.selectedTable.id;
