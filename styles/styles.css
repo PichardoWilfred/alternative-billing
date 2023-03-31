@@ -391,11 +391,19 @@ ul.table li.quantity {
     cursor: pointer;
     transition: background-color 0.1s ease-in-out;
 }
-ul.table li.quantity:is(:hover, :active, .selected ) {
+ul.table li.quantity:is(:hover, :active, .selected) {
     background-color: #0000000D;
 }
-ul.table li.quantity:is(:hover, :active) input.value{
+ul.table li.quantity.selected input.value {
     border-color:#e1e1e1;
+    opacity: .65;
+}
+ul.table li.quantity:is(:hover, :active) input.value {
+    border-color:#e1e1e1;
+}
+
+ul.table li.quantity div.select-indicator {
+    margin-left: 16px;
 }
 
 ul.table li {
@@ -467,7 +475,7 @@ ul.table li input:is(.value, .name):disabled {
     line-height: 1.2;
 }
 
-.table-sum {
+div.table-sum {
     position: fixed;
     bottom: 0;
 
@@ -483,12 +491,12 @@ ul.table li input:is(.value, .name):disabled {
     flex-grow: 1;
 }
 
-.table-sum .total {
+div.table-sum div.total {
     margin-left: auto;
     text-align: start;
 }
 
-.table-sum .total h4.label {
+div.table-sum div.total h4.label {
     font-size: 13px;
     font-weight: 600;
     color:#C9C9C9;
@@ -496,7 +504,7 @@ ul.table li input:is(.value, .name):disabled {
     text-align: right;
     margin-bottom: 3px;
 }
-.table-sum .total h3.value {
+div.table-sum div.total h3.value {
     display: flex;
     justify-content: end;
     text-align: end;

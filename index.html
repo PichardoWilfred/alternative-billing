@@ -88,28 +88,37 @@
                     </div>
                     <ul class="table" @click.outside="() => { unselect_all() }">
                         <template x-for="(quantity, index) in selectedTable.quantities" :key="index">
-                            <li class="quantity" 
+                            <li class="quantity" :key="index"
                                 @click.outside="() => { saveQuantity('unfocused', index, $el); }"
                                 :class="is_selected(index) && 'selected'"
                                 @mousedown="enable_select(index)" @touchstart="enable_select(index)"
-                                @mouseup="cancel_select" @mouseleave="cancel_select" 
-                                @touchend="cancel_select"
+                                @mouseup="() => {cancel_select() }" @mouseleave="() => {cancel_select() }" 
+                                @touchend="() => {cancel_select() }"
                                 @click="toggle_select(index)">
 
                                 <input :id="`quantity-name-${index}`" class="name"
                                 type="text"
                                 x-model="quantity.name"
                                 @click="() => { focus_quantity(index, 'name') }"
-                                
+                                :disabled="select_mode"
                                 @keydown.enter.prevent="saveQuantity('enter', index, $el)"
                                 >
-                                <template x-if="!select_mode">
-                                    <input :id="`quantity-value-${index}`" class="value"
-                                    type="number"
-                                    x-model="quantity.value"
-                                    @click="() => { focus_quantity(index, 'value') }"
-                                    @keydown.enter.prevent="saveQuantity('enter', index, $el)"
-                                    >
+                                <input :id="`quantity-value-${index}`" class="value"
+                                type="number"
+                                :disabled="select_mode"
+                                x-model="quantity.value"
+                                @click="() => { focus_quantity(index, 'value') }"
+                                @keydown.enter.prevent="saveQuantity('enter', index, $el)"
+                                >
+                                <template x-if="select_mode">
+                                    <div class="select-indicator">
+                                        <template x-if="!is_selected(index)">
+                                            <i class="fa-regular fa-circle"></i>
+                                        </template>
+                                        <template x-if="is_selected(index)">
+                                            <i class="fa-solid fa-circle-check"></i>
+                                        </template>
+                                    </div>
                                 </template>
                             </li>
                         </template>                        
@@ -124,9 +133,16 @@
             </main>
         </template>
         <div class="table-sum">
-            <div class="total">
-                <h4 class="label">TOTAL:</h4>
-                <h3 class="value" x-text="total"></h3>
+            <div class="info">
+                <template x-if="select_mode">
+                    <button @click="remove_selected_items()">
+                        Eliminar items seleccionados
+                    </button>
+                </template>
+                <div class="total">
+                    <h4 class="label">TOTAL:</h4>
+                    <h3 class="value" x-text="total"></h3>
+                </div>
             </div>
             <div class="new-quantity" :class="tables.length === 0 && 'disabled'">
                 <input

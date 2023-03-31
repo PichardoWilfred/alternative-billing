@@ -33,6 +33,7 @@ document.addEventListener('alpine:init', () => {
             focus_new_quantity: 0,
             focus_label: 0,
             hold_click: 0,
+            hold_click_1: 0,
         },
         modal: {
             visible: false,
@@ -108,6 +109,7 @@ document.addEventListener('alpine:init', () => {
                     this.updateLocalStorage('selectedTable', this.selectedTable, { serialize: true });
                 }
             });
+            this.unselect_all();
         },
         get total() {
             // const format = (value) => {
@@ -325,11 +327,14 @@ document.addEventListener('alpine:init', () => {
         enable_select(selected) {
             this.timeout.hold_click = setTimeout(() => {
                 this.select_mode = true;
-                this.selected_quantities.push(selected);
             }, 800);
+            this.timeout.hold_click_1 = setTimeout(() => {
+                if (this.select_mode) this.selected_quantities.push(selected);
+            }, 900);
         },
         cancel_select() {
             clearTimeout(this.timeout.hold_click);
+            clearTimeout(this.timeout.hold_click_1);
         },
         is_selected(index) {
             return this.selected_quantities.indexOf(index) !== -1;
@@ -340,20 +345,14 @@ document.addEventListener('alpine:init', () => {
         },
         toggle_select(index) {
             if (!this.select_mode) return; //action only if we are selecting
-            if (!this.selected_quantities.length) this.unselect_all();
-
-            // if (this.selected_quantities.length) { }
-            console.log(index);
             if (this.is_selected(index)) { // unselect
-                console.log('remove');
-                // console.log(real_index);
-                this.selected_quantities.splice(real_index, 1);
+                // console.log(`(removing): ${index}`);
+                this.selected_quantities = this.selected_quantities.filter((i) => i !== index );
+                if (this.selected_quantities.length === 0) this.unselect_all();
             }else { // select
-                console.log('add');
+                // console.log(`(adding): ${index}`);
                 this.selected_quantities.push(index);
             }
-
-            console.log(this.selected_quantities);
         },
         //
         updateLocalStorage(key, value, options = { serialize: false }){
@@ -363,6 +362,11 @@ document.addEventListener('alpine:init', () => {
                 localStorage.setItem(key, value)                
             }
         },
+        remove_selected_items() {
+            if (this.selected_quantities.length === 0) return;
+            console.log('uwu');
+            this.unselect_all();
+        }
         // clickOutside(index, label_) {
         // if (id !== this.selectedTable.id) return;
         // let editing;
