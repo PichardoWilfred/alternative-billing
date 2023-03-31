@@ -190,7 +190,7 @@ document.addEventListener('alpine:init', () => {
                 updated_quantity = { value: value.value, name: name.value };
             };
 
-            this.updateTable({type: 'quantity', updated_quantity, index: index_editing});
+            this.updateTable({type: 'update_quantity', updated_quantity, index: index_editing});
         },
         // new_quantity = 0, index = 0, action
         updateTable(action) {
@@ -201,10 +201,14 @@ document.addEventListener('alpine:init', () => {
                     table.editing.label = false;
                 }
                 if (table.id !== this.selectedTable.id) return;  // updating the specific quantity
-                if (action.type === 'quantity') {
-                    const {name, value} = action.updated_quantity;
-                    // console.log(value.replace(/\D/g,'') * 1);
-                    // if ( action.new_quantity * 1 <= 0) { }else { }
+                if (action.type === 'update_quantity') {
+                    const { name, value } = action.updated_quantity;
+                    // table.quantities.splice(action.index, 1); // (delete)
+                    table.quantities[action.index] = { name, value: value.replace(/\D/g,'') * 1 };
+                    this.selectedTable.quantities = table.quantities;
+                }
+                if (action.type === 'remove_quantities') {
+                    const { name, value } = action.updated_quantity;
                     // table.quantities.splice(action.index, 1); // (delete)
                     table.quantities[action.index] = { name, value: value.replace(/\D/g,'') * 1 };
                     this.selectedTable.quantities = table.quantities;
@@ -213,13 +217,12 @@ document.addEventListener('alpine:init', () => {
                     table.label = action.new_label;
                 }
                 if (action.type === 'new_quantity') {
-                    const name = `Item #${table.quantities.length + 1}`;
+                    const name = `Item #${ table.quantities.length + 1 }`;
                     table.quantities.push({ name, value: action.new_quantity.replace(/\D/g,'') * 1 });
                     this.selectedTable.quantities = table.quantities;
                     this.new_quantity = 0;
                     action.el.focus();
                 }
-                // }
             });
             this.updateLocalStorage('selectedTable', this.selectedTable, { serialize: true })
             this.updateLocalStorage('tables', this.tables, { serialize: true });
@@ -355,7 +358,7 @@ document.addEventListener('alpine:init', () => {
             }
         },
         //
-        updateLocalStorage(key, value, options = { serialize: false }){
+        updateLocalStorage(key, value, options = { serialize: false }) {
             if (options.serialize) {
                 localStorage.setItem(key, JSON.stringify(value))                
             }else {
@@ -364,7 +367,7 @@ document.addEventListener('alpine:init', () => {
         },
         remove_selected_items() {
             if (this.selected_quantities.length === 0) return;
-            console.log('uwu');
+            
             this.unselect_all();
         }
         // clickOutside(index, label_) {
