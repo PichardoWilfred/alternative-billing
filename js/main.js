@@ -138,9 +138,9 @@ document.addEventListener('alpine:init', () => {
         },
         focus_quantity(index, input) {
             this.timeout.focus_quantity = setTimeout(() => { // we need to make this function to enter after our .outside handler (saveQuantity)
-                if (this.selectedTable.editing.quantity.index === index) return; // ignore if we select the same one
-                this.selectedTable.editing.quantity = {index, input};
-                const input_ = document.querySelector(`#quantity-${input}-${index}`);
+                if (this.selectedTable.editing.quantity === index) return; // ignore if we select the same one
+                this.selectedTable.editing.quantity = index;
+                const input = document.querySelector(`#quantity-value-${index}`);
                 this.timeout.quantity = setTimeout(() => {
                     input_.focus();
                 }, 0);
@@ -183,14 +183,8 @@ document.addEventListener('alpine:init', () => {
                 const name = element.querySelector('input.name');
                 updated_quantity = { value: value.value, name: name.value };
             }
-            if (action === 'enter') {
-                const li = element.parentElement;
-                const value = li.querySelector('input.value');
-                const name = li.querySelector('input.name');
-                updated_quantity = { value: value.value, name: name.value };
-            };
-
-            this.updateTable({type: 'update_quantity', updated_quantity, index: index_editing});
+            if (action === 'enter') updated_quantity = element.value;
+            this.updateTable({type: 'quantity', updated_quantity, index: index_editing});
         },
         // new_quantity = 0, index = 0, action
         updateTable(action) {
