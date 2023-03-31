@@ -132,7 +132,7 @@ document.addEventListener('alpine:init', () => {
                 this.tables.map((table) => {
                     if (table.id === this.selectedTable.id) {
                         table.editing.label = true;
-                    };
+                    }
                 });
             });
         },
@@ -140,7 +140,7 @@ document.addEventListener('alpine:init', () => {
             this.timeout.focus_quantity = setTimeout(() => { // we need to make this function to enter after our .outside handler (saveQuantity)
                 if (this.selectedTable.editing.quantity === index) return; // ignore if we select the same one
                 this.selectedTable.editing.quantity = index;
-                const input = document.querySelector(`#quantity-value-${index}`);
+                const input_ = document.querySelector(`#quantity-value-${index}`);
                 this.timeout.quantity = setTimeout(() => {
                     input_.focus();
                 }, 0);
@@ -176,7 +176,6 @@ document.addEventListener('alpine:init', () => {
             const index_editing = this.selectedTable.editing.quantity.index;
             this.selectedTable.editing.quantity = { index: null, input: null };
             let updated_quantity;
-
             // we need this in case the user clicks on a different tab.
             if (action === 'unfocused') {
                 const value = element.querySelector('input.value');
@@ -202,10 +201,8 @@ document.addEventListener('alpine:init', () => {
                     this.selectedTable.quantities = table.quantities;
                 }
                 if (action.type === 'remove_quantities') {
-                    const { name, value } = action.updated_quantity;
-                    // table.quantities.splice(action.index, 1); // (delete)
-                    table.quantities[action.index] = { name, value: value.replace(/\D/g,'') * 1 };
-                    this.selectedTable.quantities = table.quantities;
+                    table.quantities = action.quantities;
+                    this.selectedTable.quantities = action.quantities;
                 }
                 if (action.type === 'label' && last_edited) {
                     table.label = action.new_label;
@@ -220,6 +217,7 @@ document.addEventListener('alpine:init', () => {
             });
             this.updateLocalStorage('selectedTable', this.selectedTable, { serialize: true })
             this.updateLocalStorage('tables', this.tables, { serialize: true });
+            console.log('');
         },
         deleteTable() {
             const id = this.selectedTable.id;
@@ -252,7 +250,7 @@ document.addEventListener('alpine:init', () => {
                 quantities: [{ name: 'Item #1', value: 0 }],
                 editing: {
                     label: false,
-                    quantity: {index: null, input: null},
+                    quantity: { index: null, input: null },
                     new_quantity: false,
                 },
             }
@@ -286,6 +284,7 @@ document.addEventListener('alpine:init', () => {
                     table.editing.quantity = {index: null, input: null}; // clean the rest
                 }
             })
+
             this.selectedTable.id = id; 
             this.selectedTable.label = label;
             this.selectedTable.quantities = quantities || [0];
@@ -353,6 +352,7 @@ document.addEventListener('alpine:init', () => {
         },
         //
         updateLocalStorage(key, value, options = { serialize: false }) {
+
             if (options.serialize) {
                 localStorage.setItem(key, JSON.stringify(value))                
             }else {
@@ -361,7 +361,10 @@ document.addEventListener('alpine:init', () => {
         },
         remove_selected_items() {
             if (this.selected_quantities.length === 0) return;
-            
+            const quantities = this.selectedTable.quantities.filter((quantity, index) => this.selected_quantities.indexOf(index) === -1);
+            console.log(`quantities: \n`);
+            console.log(quantities);
+            this.updateTable({type: 'remove_quantities', quantities});
             this.unselect_all();
         }
         // clickOutside(index, label_) {
