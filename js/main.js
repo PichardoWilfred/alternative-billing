@@ -173,7 +173,7 @@ document.addEventListener('alpine:init', () => {
         },
         saveQuantity(action, index, element) { // (we need to specify which one of the inputs we are focusing...)            
             if (this.selectedTable.editing.quantity.index !== index ) return; //validating that only the selected will be triggered
-            console.log('PASSING');
+            // console.log('PASSING');
             const index_editing = this.selectedTable.editing.quantity.index;
             this.selectedTable.editing.quantity = { index: null, input: null };
             let updated_quantity;
@@ -184,8 +184,8 @@ document.addEventListener('alpine:init', () => {
                 updated_quantity = { value: value.value, name: name.value };
             }
             if (action === 'enter') updated_quantity = element.value;
-            console.log('are we saving quantity?');
-            console.log({type: 'quantity', updated_quantity, index: index_editing});
+            // console.log('are we saving quantity?');
+            // console.log({type: 'quantity', updated_quantity, index: index_editing});
             this.updateTable({type: 'update_quantity', updated_quantity, index: index_editing});
         },
         // new_quantity = 0, index = 0, action
@@ -212,13 +212,13 @@ document.addEventListener('alpine:init', () => {
                 }
                 if (action.type === 'new_quantity') {
                     const name = `Item #${ table.quantities.length + 1 }`;
-                    console.log('previous quantities');
-                    console.log(table.quantities);
+                    // console.log('previous quantities');
+                    // console.log(table.quantities);
                     table.quantities.push({ name, value: action.new_quantity.replace(/\D/g,'') * 1 });
-                    console.log('new quantity:\n');
-                    console.log({ name, value: action.new_quantity.replace(/\D/g,'') * 1 });
-                    console.log('table quantities:\n');
-                    console.log(table.quantities);
+                    // console.log('new quantity:\n');
+                    // console.log({ name, value: action.new_quantity.replace(/\D/g,'') * 1 });
+                    // console.log('table quantities:\n');
+                    // console.log(table.quantities);
 
                     this.selectedTable.quantities = table.quantities;
                     this.new_quantity = 0;
@@ -256,7 +256,8 @@ document.addEventListener('alpine:init', () => {
         addTable() {
             let id;
             const new_table = {
-                quantities: [{ name: 'Item #1', value: 0 }],
+                // { name: 'Item #1', value: 0 }
+                quantities: [],
                 editing: {
                     label: false,
                     quantity: { index: null, input: null },
@@ -306,17 +307,19 @@ document.addEventListener('alpine:init', () => {
                 {
                     id: 1, 
                     label: 'Lista #1',
-                    quantities: [{ name: 'Item #1', value: 0}],
+                    // { name: 'Item #1', value: 0}
+                    quantities: [],
                     editing: {
                         label: false,
                         quantity: { index: null, input: null }
                     },
                 }
             ];
+            // { name: 'Item #1', value: 0}
             this.selectedTable = {
                 id: 1,
                 label: 'Lista #1',
-                quantities: [{ name: 'Item #1', value: 0}],
+                quantities: [],
                 editing: {
                     label: false,
                     quantity: { index: null, input: null }
@@ -361,7 +364,6 @@ document.addEventListener('alpine:init', () => {
         },
         //
         updateLocalStorage(key, value, options = { serialize: false }) {
-
             if (options.serialize) {
                 localStorage.setItem(key, JSON.stringify(value))                
             }else {
@@ -371,8 +373,6 @@ document.addEventListener('alpine:init', () => {
         remove_selected_items() {
             if (this.selected_quantities.length === 0) return;
             const quantities = this.selectedTable.quantities.filter((quantity, index) => this.selected_quantities.indexOf(index) === -1);
-            console.log(`quantities: \n`);
-            console.log(quantities);
             this.updateTable({type: 'remove_quantities', quantities});
             this.unselect_all();
         }
@@ -429,15 +429,3 @@ document.addEventListener('alpine:init', () => {
         // },
     }));
 })
-
-// utilities
-// function focusDiv(id) {
-//     const parent = document.querySelector('#product-'+id)
-//     const span = parent.querySelector('span.tag');
-//     const selection = window.getSelection();
-//     const range = document.createRange();
-//     range.setStart(span, 0);
-//     range.setEnd(span, 0);
-//     selection.removeAllRanges();
-//     selection.addRange(range);
-// }

@@ -296,7 +296,7 @@ header ul.table-list li.selected::after {
 }
 
 
-.card {
+div.card {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -306,6 +306,10 @@ header ul.table-list li.selected::after {
 
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+div.card.no-quantities {
+    box-shadow: none;
+    height: 100%;
 }
 #scroll-container.not-found {
     display: flex;
@@ -352,6 +356,23 @@ header ul.table-list li.selected::after {
 }
 .divider {
     background-color: #656565;
+}
+div.no-quantities-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #E6E8EC;
+    height: 100%;
+}
+div.no-quantities-container img {
+    width: 60px;
+}
+div.no-quantities-container h1{
+    margin-top: 12px;
+    text-align: center;
+    font-weight: 600;
+    color: #777777;
 }
 
 ul.table {
@@ -491,6 +512,25 @@ div.table-sum {
     flex-grow: 1;
     z-index: 3;
 }
+
+
+div.table-sum div.info {
+    display: flex;
+}
+div.table-sum div.info button.delete-items {
+    padding-inline: 10px;
+    background-color: transparent;
+    border: 3px solid #E92222;
+    color: #E92222;
+    font-weight: 600;
+}
+div.table-sum div.info button.delete-items:hover {
+    background-color: #FFDBDB;
+}
+div.table-sum div.info button.delete-items i {
+    margin-right: 8px;
+}
+
 
 div.table-sum div.total {
     margin-left: auto;
