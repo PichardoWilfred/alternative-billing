@@ -318,7 +318,7 @@ div.card {
     max-height: calc(100% - 100px);
     margin-inline: auto;
 
-    background-color: white;
+    /* background-color: white; */
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 div.card.no-quantities {
@@ -338,6 +338,7 @@ div.card.no-quantities {
 .card-header {
     display: flex;
     padding: 20px 12px 16px 12px;
+    background-color: white;
     border-top: 1px solid #D9D9D9;
     border-bottom: 2px solid #D9D9D9;
 }
@@ -402,7 +403,7 @@ ul.table {
     max-height: calc(100% - 60px);
     overflow-y: scroll;
 
-    background-color: white;
+    /* background-color: white; */
     /* box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset; */
     z-index: 3;
 }
@@ -422,6 +423,8 @@ ul.table li.quantity {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    background-color: white;
     
     padding-block: 6px;
     padding-right: 30px;
@@ -431,7 +434,7 @@ ul.table li.quantity {
     transition: background-color 0.1s ease-in-out;
 }
 ul.table li.quantity:is(:hover, :active, .selected) {
-    background-color: #0000000D;
+    background-color: #eee;
 }
 ul.table li.quantity.selected input.value {
     border-color:#e1e1e1;
@@ -531,7 +534,6 @@ div.table-sum {
     z-index: 3;
 }
 
-
 div.table-sum div.info {
     display: flex;
 }
@@ -560,12 +562,16 @@ div.table-sum div.info span.error-label{
     height: max-content;
 }
 
-div.table-sum div.total {
+div.table-sum div.mobile-total {
+    display: block;
     margin-left: auto;
     text-align: start;
 }
+div.table-sum div.desktop-total {
+    display: none;
+}
 
-div.table-sum div.total h4.label {
+div.table-sum div:is(.mobile-total, .desktop-total) h4.label {
     font-size: 13px;
     font-weight: 600;
     color:#C9C9C9;
@@ -573,7 +579,7 @@ div.table-sum div.total h4.label {
     text-align: right;
     margin-bottom: 3px;
 }
-div.table-sum div.total h3.value {
+div.table-sum div:is(.mobile-total, .desktop-total) h3.value {
     display: flex;
     justify-content: end;
     text-align: end;
@@ -636,6 +642,9 @@ div.table-sum div.total h3.value {
     display: none;
 }
 @media (min-width: 768px) {
+    main {
+        max-height: calc(100% - 100px);
+    }
     .card {
         height: 750px;
     }
@@ -656,7 +665,7 @@ div.table-sum div.total h3.value {
         margin-right: 22px;
     }
     div.card-header button.print-table {
-        margin-left: 22px;
+        margin-left: 8px;
     }
     .card-header button:is(.delete-table, .print-table) {
         font-weight: 600;
@@ -664,6 +673,56 @@ div.table-sum div.total h3.value {
     .desktop-visible {
         display: flex; 
         margin-left: 12px;
+    }
+    .card-header input.table-name {
+        width: 33%;
+    }
+    ul.table {
+        align-content: start;
+        justify-content: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    ul.table li.quantity {
+        width: 33.33%;
+        height: max-content;
+        border-right: 1px solid #ddd;
+    }
+    div.table-sum {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    div.table-sum div.mobile-total {
+        display: none;
+    }
+    div.table-sum div.desktop-total {
+        display: block;
+    }
+    
+    div.table-sum div.new-quantity {
+        display: flex;
+        align-items: center;
+        width: 33.33% !important;
+        margin-top: 0;
+        margin-inline: auto;
+        flex-grow: unset;
+    }
+    div.table-sum div.new-quantity input {
+        order: 1;
+        flex-grow: unset;
+        height: max-content;
+        height: 45px;
+    }
+    div.table-sum div.new-quantity button {
+        display: flex;
+        align-items: center;
+        align-content: center;
+        font-weight: 600;
+        order: 2;
+        min-width: 165px;
+        height: 45px;
     }
 }
 

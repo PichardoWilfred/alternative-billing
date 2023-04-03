@@ -93,6 +93,12 @@ document.addEventListener('alpine:init', () => {
         },
         tables,
         new_quantity: 0,
+        validateQuantity(event) {
+            const regex = new RegExp(/(^\d*$)|(Backspace|Tab|Delete|ArrowLeft|ArrowRight|\.)/);
+            const valid = !event.key.match(regex) && event.preventDefault();
+            // console.log(valid ? 'eo':'ño!');
+            return valid;
+        },
         selectedTable,
         init() {
             if (selectedTable.id !== 0) return; //if there's not selectedTable on localstorage assign the first one 
@@ -167,14 +173,15 @@ document.addEventListener('alpine:init', () => {
         saveNewQuantity(element) {
             const quantity = element.value;
             const new_label = quantity.replace(/,+/g,'').replace(/\s+/g, ' ').trim();
-            const proper_quantities_length = this.selectedTable.quantities.length < 10; // (limit 11, cause 1 is missing yet for being added)
-            if (new_label && new_label > 0 && proper_quantities_length) {
+            // const proper_quantities_length = this.selectedTable.quantities.length < 19; // (limit 11, cause 1 is missing yet for being added)
+            // && proper_quantities_length
+            if (new_label && new_label > 0) {
                 this.error.visible = false;
                 this.updateTable({ type: 'new_quantity', new_quantity: this.new_quantity, el: element}); //save label
             }
-            if (!proper_quantities_length) {
-                this.error.visible = true;
-            }
+            // if (!proper_quantities_length) {
+            //     this.error.visible = true;
+            // }
         },
         saveQuantity(action, index, element) { // (we need to specify which one of the inputs we are focusing...)            
             if (this.selectedTable.editing.quantity.index !== index ) return; //validating that only the selected will be triggered
@@ -219,7 +226,8 @@ document.addEventListener('alpine:init', () => {
                     const name = `Item #${ table.quantities.length + 1 }`;
                     // console.log('previous quantities');
                     // console.log(table.quantities);
-                    table.quantities.push({ name, value: action.new_quantity.replace(/\D/g,'') * 1 });
+                    console.log( action.new_quantity * 1);
+                    table.quantities.push({ name, value: action.new_quantity * 1 });
                     // console.log('new quantity:\n');
                     // console.log({ name, value: action.new_quantity.replace(/\D/g,'') * 1 });
                     // console.log('table quantities:\n');
@@ -394,7 +402,6 @@ document.addEventListener('alpine:init', () => {
         // if (id !== this.selectedTable.id) return;
         // let editing;
         // this.tables.map((table) => { if(table.id === id) editing = table.editing })
-
         // this.unSelectTable(id);
         // this.updateLabel({id, label}, label_)
         // },

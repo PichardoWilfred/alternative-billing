@@ -122,7 +122,7 @@
                                     @mouseup="() => {cancel_select() }" @mouseleave="() => {cancel_select() }" 
                                     @touchend="() => {cancel_select() }"
                                     @click="toggle_select(index)">
-    
+
                                     <input :id="`quantity-name-${index}`" class="name"
                                     type="text"
                                     x-model="quantity.name"
@@ -136,6 +136,7 @@
                                     x-model="quantity.value"
                                     @click="() => { focus_quantity(index, 'value') }"
                                     @keydown.enter.prevent="saveQuantity('enter', index, $el)"
+                                    @keydown="(e) => {validateQuantity(e)}"
                                     >
                                     <template x-if="select_mode">
                                         <div class="select-indicator">
@@ -171,21 +172,30 @@
                 <template x-if="error.visible">
                     <span x-text="error.label" class="error-label"></span>
                 </template>
-                <div class="total">
+                <div class="mobile-total">
                     <h4 class="label">TOTAL:</h4>
                     <h3 class="value" x-text="total"></h3>
                 </div>
             </div>
             <div class="new-quantity non-printable" :class="tables.length === 0 && 'disabled'">
                 <input
+                type="number"
+                pattern="[1-9]"
                 x-ref="new_quantity"
                 x-model="new_quantity"
-                x-mask.numeral
                 @click="() => { focus_newQuantity() }"
+                @keydown="(e) => {validateQuantity(e)}"
                 @keydown.enter.prevent="saveNewQuantity($el)">
                 <button type="button" @click="() => { saveNewQuantity($refs.new_quantity) }">
                     <i class="fa-solid fa-paper-plane"></i>
+                    <span class="desktop-visible">
+                        Agregar item
+                    </span
                 </button>
+            </div>
+            <div class="desktop-total">
+                <h4 class="label">TOTAL:</h4>
+                <h3 class="value" x-text="total"></h3>
             </div>
         </div>
     </div>
