@@ -24,12 +24,18 @@
             </button>
             <button @click="addTable()" class="add-table">
                 <img src="./assets/add-table.svg" alt="" srcset="">
+                <span class="desktop-visible">
+                    Añadir tabla
+                </span>
             </button>
             <div class="popup-container">
                 <button class="options" @click="() => { popup.visible = true }">
                     <i class="fa-solid fa-gear"></i>
+                    <span class="desktop-visible">
+                        Configuración
+                    </span
                 </button>
-                <ul x-show="popup.visible" class="pop-up" @click.outside="() => {popup.visible = false}" x-transition.opacity x-cloak>
+                <ul x-show="popup.visible" class="pop-up" @click.outside="() => { popup.visible = false }" x-transition.opacity x-cloak>
                     <li @click="open_modal('Reiniciar aplicación', '¿Estás seguro de que deseas reiniciar la aplicación? En este caso, se <b>borrarán todos los datos que tienes almacenados </b> hasta ahora.', [''], 'reset')">
                         <i class="fa-solid fa-arrows-rotate"></i>
                         <span>
@@ -87,9 +93,15 @@
                         >
                         <button type="button" class="print-table non-printable" @click="print">
                             <i class="fa-solid fa-print"></i>
+                            <span class="desktop-visible">
+                                Imprimir tabla
+                            </span>
                         </button>
                         <button type="button" class="delete-table non-printable" @click="() => { open_modal('Eliminar tabla','¿Está seguro de que desea eliminar la tabla <b>{0}</b> ?',[selectedTable.label], 'delete') }">
                             <i class="fa-solid fa-trash"></i>
+                            <span class="desktop-visible">
+                                Eliminar tabla
+                            </span
                         </button>
                     </div>
                     <template x-if="selectedTable.quantities.length === 0">

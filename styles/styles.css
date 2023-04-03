@@ -116,10 +116,13 @@ nav.main {
     z-index: 9;
 }
 
-nav.main button.search {   
-    width: 48px;
-    height: 48px;
-    padding: 8px;
+nav.main button:is(.add-table, .print-table, .delete-table, .options) span.desktop-visible {
+    margin-left: 12px;
+}
+nav.main button.search {
+    padding: 0;   
+    width: 45px;
+    height: 45px;
     border-radius: 100vmax;
 }
 nav.main button.search i {
@@ -157,7 +160,6 @@ nav.main button.options {
     align-items: center;
     justify-content: center;
 
-    font-size: 20px;
     font-weight: 600;
 
     padding: 22px;
@@ -174,7 +176,7 @@ nav.main button:is(.options, .add-table, .search){
 nav.main button:is(.options, .add-table, .search):is(:hover, :active) {
     background-color: #1d1d1d;
 }
-nav.main button:is(.options, .search) i {
+nav.main button:is(.options, .search) > i {
     background-color: transparent;
     color: white;
 }
@@ -630,16 +632,38 @@ div.table-sum div.total h3.value {
     background-color: #656565;
 }
 
+.desktop-visible {
+    display: none;
+}
 @media (min-width: 768px) {
     .card {
-        max-width: 70%;
-        margin-top: 7rem;
         height: 750px;
     }
-}
-@media (min-width: 1200px) {
-    .card {
-        max-width: 550px;
+    /* all buttons in desktop */
+    button:is(.search, .add-table, .options, .delete-table, .print-table) {
+        display: flex;
+        align-items: center;
+        border-radius: 6px !important;
+        font-size: unset;        
+        width: unset !important;
+        height: unset !important;
+        padding: 10px !important;
+    }
+    button:is(.search, .add-table, .options, .delete-table, .print-table):active {
+        color: unset;
+    }
+    nav.main button.add-table {
+        margin-right: 22px;
+    }
+    div.card-header button.print-table {
+        margin-left: 22px;
+    }
+    .card-header button:is(.delete-table, .print-table) {
+        font-weight: 600;
+    }
+    .desktop-visible {
+        display: flex; 
+        margin-left: 12px;
     }
 }
 
