@@ -5,24 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alternative billing</title>
-    <link rel="stylesheet" href="./styles/reset.css" media="screen" />
-    <link rel="stylesheet" href="./styles/styles.css" media="screen" />
+    <link rel="stylesheet" href="./styles/reset.css" />
+    <link rel="stylesheet" href="./styles/overwritting.css" />
+    <link rel="stylesheet" href="./styles/commons.css" />
+    <link rel="stylesheet" href="./styles/styles.css"  />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://unpkg.com/minibarjs@latest/dist/minibar.min.css" rel="stylesheet" type="text/css">
     <script src="https://unpkg.com/minibarjs@latest/dist/minibar.min.js" type="text/javascript"></script>
     <script type="module" src="./js/main.js"></script>
-    <!-- <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/@ryangjchandler/alpine-mask@0.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
     <div class="container" x-data="store">
         <nav class="main">
-            <button @click="addTable()" class="add-table">
+            <button @click="addTable()" class="add-table non-printable">
                 <i class="fa-solid fa-plus"></i>
                 Añadir tabla
             </button>
-            <div class="popup-container">
+            <div class="popup-container non-printable">
                 <button class="options" @click="() => {popup.visible = true}">
                     <i class="fa-solid fa-gear"></i>
                 </button>
@@ -31,6 +32,12 @@
                         <i class="fa-solid fa-arrows-rotate"></i>
                         <span>
                             Reiniciar aplicación
+                        </span>
+                    </li>
+                    <li @click="print">
+                        <i class="fa-solid fa-print"></i>
+                        <span>
+                            Imprimir PDF
                         </span>
                     </li>
                     <li>
@@ -64,7 +71,7 @@
         </div>
         <template x-if="tables.length >= 1">
             <main>
-                <header>
+                <header class="non-printable">
                     <ul class="table-list">
                         <template x-for="(table, index) in tables" :key="table.id">
                             <li :class="table.id === selectedTable.id && 'selected'" @click="() => {selectTable(table)}">
@@ -82,7 +89,7 @@
                             @keydown.enter.prevent="() => { saveLabel($el) }"
                             maxlength="15"
                         >
-                        <button type="button" class="delete-table" @click="() => { open_modal('Eliminar tabla','¿Está seguro de que desea eliminar la tabla <b>{0}</b> ?',[selectedTable.label], 'delete') }">
+                        <button type="button" class="delete-table non-printable" @click="() => { open_modal('Eliminar tabla','¿Está seguro de que desea eliminar la tabla <b>{0}</b> ?',[selectedTable.label], 'delete') }">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </div>
@@ -144,18 +151,21 @@
         </template>
         <div class="table-sum">
             <div class="info">
-                <template x-if="select_mode">
+                <template x-if="select_mode && !error.visible">
                     <button class="delete-items" @click="remove_selected_items()">
                         <i class="fa-solid fa-xmark"></i>
                         Eliminar item
                     </button>
+                </template>
+                <template x-if="error.visible">
+                    <span x-text="error.label" class="error-label"></span>
                 </template>
                 <div class="total">
                     <h4 class="label">TOTAL:</h4>
                     <h3 class="value" x-text="total"></h3>
                 </div>
             </div>
-            <div class="new-quantity" :class="tables.length === 0 && 'disabled'">
+            <div class="new-quantity non-printable" :class="tables.length === 0 && 'disabled'">
                 <input
                 x-ref="new_quantity"
                 x-model="new_quantity"

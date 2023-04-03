@@ -1,7 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500&family=Poppins:ital,wght@0,100;0,200;0,300;0,600;0,700;1,400;1,500&display=swap');
-@import './overwritting.css';
-@import './commons.css';
-
 /* Alpine */
 [x-cloak] {
     display: none !important;
@@ -532,6 +529,16 @@ div.table-sum div.info button.delete-items i {
 }
 
 
+div.table-sum div.info span.error-label{
+    display: flex;
+    margin-right: auto;
+    margin-top: auto;
+    color: #E92222;
+    font-size: 12px;
+    align-items: end;
+    height: max-content;
+}
+
 div.table-sum div.total {
     margin-left: auto;
     text-align: start;
@@ -614,5 +621,11 @@ div.table-sum div.total h3.value {
 @media (min-width: 1200px) {
     .card {
         max-width: 550px;
+    }
+}
+
+@media print {
+    .non-printable {
+        display: none !important;
     }
 }

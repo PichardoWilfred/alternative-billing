@@ -167,8 +167,13 @@ document.addEventListener('alpine:init', () => {
         saveNewQuantity(element) {
             const quantity = element.value;
             const new_label = quantity.replace(/,+/g,'').replace(/\s+/g, ' ').trim();
-            if (new_label && new_label > 0) {
+            const proper_quantities_length = this.selectedTable.quantities.length < 10; // (limit 11, cause 1 is missing yet for being added)
+            if (new_label && new_label > 0 && proper_quantities_length) {
+                this.error.visible = false;
                 this.updateTable({ type: 'new_quantity', new_quantity: this.new_quantity, el: element}); //save label
+            }
+            if (!proper_quantities_length) {
+                this.error.visible = true;
             }
         },
         saveQuantity(action, index, element) { // (we need to specify which one of the inputs we are focusing...)            
@@ -300,6 +305,7 @@ document.addEventListener('alpine:init', () => {
             this.selectedTable.quantities = quantities || [0];
             
             this.updateLocalStorage('selectedTable', this.selectedTable, { serialize: true });
+            this.error.visible = false;
         },
         resetApp() { // contingency plan
             localStorage.clear();
@@ -335,6 +341,7 @@ document.addEventListener('alpine:init', () => {
         enable_select(selected) {
             this.timeout.hold_click = setTimeout(() => {
                 this.select_mode = true;
+                this.error.visible = false;
             }, 800);
             this.timeout.hold_click_1 = setTimeout(() => {
                 if (this.select_mode) this.selected_quantities.push(selected);
@@ -362,19 +369,26 @@ document.addEventListener('alpine:init', () => {
                 this.selected_quantities.push(index);
             }
         },
-        //
+        remove_selected_items() {
+            if (this.selected_quantities.length === 0) return;
+            const quantities = this.selectedTable.quantities.filter((quantity, index) => this.selected_quantities.indexOf(index) === -1);
+            this.updateTable({type: 'remove_quantities', quantities});
+            this.unselect_all();
+        },
+        print(){
+            print();
+        },
+        error: {
+            visible: false,
+            label: 'Haz superado el límite de items por lista.'
+        },
+
         updateLocalStorage(key, value, options = { serialize: false }) {
             if (options.serialize) {
                 localStorage.setItem(key, JSON.stringify(value))                
             }else {
                 localStorage.setItem(key, value)                
             }
-        },
-        remove_selected_items() {
-            if (this.selected_quantities.length === 0) return;
-            const quantities = this.selectedTable.quantities.filter((quantity, index) => this.selected_quantities.indexOf(index) === -1);
-            this.updateTable({type: 'remove_quantities', quantities});
-            this.unselect_all();
         }
         // clickOutside(index, label_) {
         // if (id !== this.selectedTable.id) return;
