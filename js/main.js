@@ -57,6 +57,10 @@ document.addEventListener('alpine:init', () => {
         popup: {
             visible: false
         },
+        get date(){
+            const d = new Date();
+            return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+        },
         open_modal(title = '', text = '', variables = [''], action_name = '', content_modal = { value: false, name: false }){
             this.modal.visible = true;
             this.modal.title = title;
@@ -475,3 +479,4 @@ window.addEventListener("beforeinstallprompt", (e) => {
         });
     });
 });
+const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];

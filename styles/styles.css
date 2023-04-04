@@ -342,6 +342,11 @@ div.card.no-quantities {
     border-top: 1px solid #D9D9D9;
     border-bottom: 2px solid #D9D9D9;
 }
+.card-header h4.print-date {
+    font-weight: 600;
+    margin-block: auto;
+    margin-left: auto;
+}
 .card-header input.table-name {
     border: 2px solid #e1e1e1;
     border-radius: 6px;
@@ -644,6 +649,9 @@ div.table-sum div:is(.mobile-total, .desktop-total) h3.value {
 .d-mobile {
     display: none;
 }
+.d-print {
+    display: none;
+}
 @media (min-width: 768px) {
     .d-mobile {
         display: block;
@@ -735,5 +743,8 @@ div.table-sum div:is(.mobile-total, .desktop-total) h3.value {
 @media print {
     .non-printable {
         display: none !important;
+    }
+    .d-print {
+        display: block !important;
     }
 }

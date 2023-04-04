@@ -92,18 +92,19 @@
                             @keydown.enter.prevent="() => { saveLabel($el) }"
                             maxlength="15"
                         >
-                        <button type="button" class="print-table non-printable" @click="print">
+                        <button type="button" class="only-on-print print-table non-printable" @click="print">
                             <i class="fa-solid fa-print"></i>
                             <span class="desktop-visible">
                                 Imprimir tabla
                             </span>
                         </button>
-                        <button type="button" class="delete-table non-printable" @click="() => { open_modal('Eliminar tabla','¿Está seguro de que desea eliminar la tabla <b>{0}</b> ?',[selectedTable.label], 'delete') }">
+                        <button type="button" class="only-on-print  delete-table non-printable" @click="() => { open_modal('Eliminar tabla','¿Está seguro de que desea eliminar la tabla <b>{0}</b> ?',[selectedTable.label], 'delete') }">
                             <i class="fa-solid fa-trash"></i>
                             <span class="desktop-visible">
                                 Eliminar tabla
-                            </span
+                            </span>
                         </button>
+                        <h4 class="print-date d-print" x-text="date"></h4>
                     </div>
                     <template x-if="selectedTable.quantities.length === 0">
                         <div class="no-quantities-container non-printable">
@@ -113,7 +114,7 @@
                             </h1>
                         </div>
                     </template>
-                    <template x-if="selectedTable.quantities.length !== 0">.card-header
+                    <template x-if="selectedTable.quantities.length !== 0">
                         <ul class="table" @click.outside="() => { unselect_all() }">
                             <template x-for="(quantity, index) in selectedTable.quantities" :key="index">
                                 <li class="quantity" :key="index"
