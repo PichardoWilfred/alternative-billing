@@ -5,15 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alternative billing</title>
+    <link rel="icon" type="image/x-icon" href="assets\icons\windows11\LargeTile.scale-100.png">
     <link rel="stylesheet" href="./styles/reset.css" />
     <link rel="stylesheet" href="./styles/overwritting.css" />
     <link rel="stylesheet" href="./styles/commons.css" />
     <link rel="stylesheet" href="./styles/styles.css"  />
+    <link rel="manifest" href="./manifest.json" crossorigin="use-credentials"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://unpkg.com/minibarjs@latest/dist/minibar.min.css" rel="stylesheet" type="text/css">
     <script src="https://unpkg.com/minibarjs@latest/dist/minibar.min.js" type="text/javascript"></script>
+    
     <script type="module" src="./js/main.js"></script>
-    <link rel="manifest" href="./manifest.json" crossorigin="use-credentials"/>
     <script src="https://cdn.jsdelivr.net/npm/@ryangjchandler/alpine-mask@0.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
@@ -43,7 +45,7 @@
                             Reiniciar aplicación
                         </span>
                     </li>
-                    <li class="" id="download-app">
+                    <li @click="download_app" class="" id="download-app">
                         <i class="fa-solid fa-download"></i>
                         <span>
                             Descargar aplicación
@@ -104,7 +106,7 @@
                                 Eliminar tabla
                             </span>
                         </button>
-                        <h4 class="print-date d-print" x-text="date"></h4>
+                        <h4 class="print-date d-print d-none" x-text="date"></h4>
                     </div>
                     <template x-if="selectedTable.quantities.length === 0">
                         <div class="no-quantities-container non-printable">

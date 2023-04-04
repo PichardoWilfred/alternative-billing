@@ -740,11 +740,17 @@ div.table-sum div:is(.mobile-total, .desktop-total) h3.value {
     }
 }
 
+.d-none {
+    display: none !important;
+}
 @media print {
     .non-printable {
         display: none !important;
     }
     .d-print {
-        display: block !important;
+        display: block;
+    }
+    .d-none {
+        display: none !important;
     }
 }

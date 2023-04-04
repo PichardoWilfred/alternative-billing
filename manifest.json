@@ -1,7 +1,7 @@
 {
     "name":"Null Billing",
     "short_name":"Billing",
-    "start_url":"index.html",
+    "start_url":"./index.html",
     "display":"standalone",
     "background-color":"#E6E8EC",
     "theme-color":"#090909",
