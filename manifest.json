@@ -1,6 +1,6 @@
 {
-    "name":"Little Bill",
-    "short_name":"LittleBill",
+    "name":"Null Billing",
+    "short_name":"Billing",
     "start_url":"index.html",
     "display":"standalone",
     "background-color":"#E6E8EC",
