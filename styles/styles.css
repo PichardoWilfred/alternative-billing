@@ -641,7 +641,13 @@ div.table-sum div:is(.mobile-total, .desktop-total) h3.value {
 .desktop-visible {
     display: none;
 }
+.d-mobile {
+    display: none;
+}
 @media (min-width: 768px) {
+    .d-mobile {
+        display: block;
+    }
     main {
         max-height: calc(100% - 100px);
     }
