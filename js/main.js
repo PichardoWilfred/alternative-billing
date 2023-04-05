@@ -34,6 +34,7 @@ document.addEventListener('alpine:init', () => {
             focus_label: 0,
             hold_click: 0,
             hold_click_1: 0,
+            search: 0,
         },
         modal: {
             visible: false,
@@ -106,8 +107,6 @@ document.addEventListener('alpine:init', () => {
         selectedTable,
         // prompt_event: null,
         download_app(){
-            // Show the prompt
-            console.log('a');
             prompt_event.prompt();
             // Wait for the user to respond to the prompt
             prompt_event.userChoice.then((choiceResult) => {
@@ -120,6 +119,9 @@ document.addEventListener('alpine:init', () => {
             });
         },
         init() {
+            this.$watch('search_active', (value) => {
+                if(!value) this.clear_search();
+            });
             if (selectedTable.id !== 0) return; //if there's not selectedTable on localstorage assign the first one 
             this.tables.map((table_, index) => {
                 if (index === 0) this.selectedTable.id = table_.id;
@@ -152,6 +154,19 @@ document.addEventListener('alpine:init', () => {
                 sum += quantity.value * 1;
             });
             return sum;
+        },
+        search_active: false,
+        search: '',
+        clear_search(){
+            this.search = '';
+            this.search_active = false
+        },
+        get filtered_tables() {
+            if (this.search.length) {
+                return this.tables.filter( i => i.label.startsWith(this.search) );
+            }else {
+                return this.tables;
+            }
         },
         focus_label() {
             this.timeout.focus_label = setTimeout(() => {

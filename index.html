@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://unpkg.com/minibarjs@latest/dist/minibar.min.css" rel="stylesheet" type="text/css">
     <script src="https://unpkg.com/minibarjs@latest/dist/minibar.min.js" type="text/javascript"></script>
-    
     <script type="module" src="./js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@ryangjchandler/alpine-mask@0.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -22,9 +21,23 @@
 <body>
     <div class="container" x-data="store">
         <nav class="main non-printable">
-            <button class="search">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
+            <div class="search-container">
+                <button class="search" @click="() => {search_active = !search_active}">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+                <input
+                    type="text" 
+                    maxlength="15" 
+                    :disabled="!search_active" 
+                    class="search"
+                    x-model="search"
+                    >
+                <template x-if="search.length > 0 && search_active">
+                    <button class="clear-search" @click="clear_search">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </template>
+            </div>
             <button @click="addTable()" class="add-table">
                 <img src="./assets/add-table.svg" alt="" srcset="">
                 <span class="desktop-visible">
@@ -33,7 +46,7 @@
             </button>
             <div class="popup-container">
                 <button class="options" @click="() => { popup.visible = true }">
-                    <i class="fa-solid fa-gear"></i>
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
                     <span class="desktop-visible">
                         Configuración
                     </span
@@ -78,7 +91,7 @@
             <main>
                 <header class="non-printable">
                     <ul class="table-list">
-                        <template x-for="(table, index) in tables" :key="table.id">
+                        <template x-for="(table, index) in filtered_tables" :key="table.id">
                             <li :class="table.id === selectedTable.id && 'selected'" @click="() => {selectTable(table)}">
                                 <span x-text="table.label" class="text-truncate"></span>
                             </li>
