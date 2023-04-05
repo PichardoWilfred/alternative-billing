@@ -232,7 +232,7 @@ document.addEventListener('alpine:init', () => {
                 if (action.type === 'update_quantity') {
                     const { name, value } = action.updated_quantity;
                     // table.quantities.splice(action.index, 1); // (delete)
-                    table.quantities[action.index] = { name, value: value.replace(/\D/g,'') * 1 };
+                    table.quantities[action.index] = { name, value: value * 1 };
                     this.selectedTable.quantities = table.quantities;
                 }
                 if (action.type === 'remove_quantities') {
@@ -244,14 +244,7 @@ document.addEventListener('alpine:init', () => {
                 }
                 if (action.type === 'new_quantity') {
                     const name = `Item #${ table.quantities.length + 1 }`;
-                    // console.log('previous quantities');
-                    // console.log(table.quantities);
-                    console.log( action.new_quantity * 1);
                     table.quantities.push({ name, value: action.new_quantity * 1 });
-                    // console.log('new quantity:\n');
-                    // console.log({ name, value: action.new_quantity.replace(/\D/g,'') * 1 });
-                    // console.log('table quantities:\n');
-                    // console.log(table.quantities);
 
                     this.selectedTable.quantities = table.quantities;
                     this.new_quantity = 0;
@@ -410,7 +403,6 @@ document.addEventListener('alpine:init', () => {
             visible: false,
             label: 'Haz superado el límite de items por lista.'
         },
-
         updateLocalStorage(key, value, options = { serialize: false }) {
             if (options.serialize) {
                 localStorage.setItem(key, JSON.stringify(value))                
@@ -494,7 +486,5 @@ window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     // Stash the event so it can be triggered later.
     prompt_event = e;
-    console.log('papo');
-    console.log( prompt_event );
     // Update UI to notify the user they can add to home screen
 });
