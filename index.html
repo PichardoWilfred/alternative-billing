@@ -17,6 +17,8 @@
     <script type="module" src="./js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@ryangjchandler/alpine-mask@0.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+    <script defer src="https://printjs-4de6.kxcdn.com/print.min.css"></script>
 </head>
 <body>
     <div class="container" x-data="store">
@@ -119,7 +121,7 @@
                                 Eliminar tabla
                             </span>
                         </button>
-                        <h4 class="print-date d-print d-none" x-text="date"></h4>
+                        <h4 class="print-date d-print" x-text="date"></h4>
                     </div>
                     <template x-if="selectedTable.quantities.length === 0">
                         <div class="no-quantities-container non-printable">
@@ -130,7 +132,7 @@
                         </div>
                     </template>
                     <template x-if="selectedTable.quantities.length !== 0">
-                        <ul class="table" @click.outside="() => { unselect_all() }">
+                        <ul class="table" @click.outside="() => { unselect_all() }" id="printable-list">
                             <template x-for="(quantity, index) in selectedTable.quantities" :key="index">
                                 <li class="quantity" :key="index"
                                     @click.outside="() => { saveQuantity('unfocused', index, $el); }"
