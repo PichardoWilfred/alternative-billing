@@ -118,17 +118,56 @@ nav.main {
     color: white;
     z-index: 9;
 }
+nav.main div.search-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+nav.main div.search-container input.search {
+    background-color: transparent;
+    font-weight: 500;
+    color: white;
+    max-width: 138px;
+    margin-inline: 6px;
+    font-size: 14px;
+    border: 0;
+    outline: 0;
+    border-bottom: 1px solid white;
+    transition: all 0.15s ease-in-out;
+}
+
+nav.main div.search-container input.search:is(:active, :focus-within){
+    outline: none;
+}
+nav.main div.search-container input.search:disabled {
+    border-bottom-color: transparent;
+    transition: all 0.15s ease-in-out;
+}
+
+nav.main div.search-container button.clear-search {
+
+    display: flex;    
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    font-size: 20px;
+
+    width: 35px;
+    height: 35px;
+    border-radius: 100vmax;
+}
 
 nav.main button:is(.add-table, .print-table, .delete-table, .options) span.desktop-visible {
     margin-left: 12px;
 }
-nav.main button.search {
+nav.main div.search-container button.search {
     padding: 0;   
     width: 45px;
     height: 45px;
     border-radius: 100vmax;
 }
-nav.main button.search i {
+nav.main div.search-container button.search i {
     font-size: 18px;
     font-weight: 600;
 }
