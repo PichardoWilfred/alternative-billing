@@ -397,8 +397,7 @@ document.addEventListener('alpine:init', () => {
             this.unselect_all();
         },
         print(){
-            printJS({ printable: 'printable-list', type: 'html', header: 'PrintJS - Form Element Selection' })
-            // print();
+            printJS({ printable: 'printable-list', scanStyles: false, css: './styles/styles.css', type: 'html'})
         },
         error: {
             visible: false,

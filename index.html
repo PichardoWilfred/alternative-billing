@@ -87,7 +87,11 @@
                         </template>
                     </ul>
                 </header>
-                <div class="card" :class="selectedTable.quantities.length === 0 && 'no-quantities'">
+                <div class="card" :class="selectedTable.quantities.length === 0 && 'no-quantities'" id="printable-list">
+                    <div class="print-header d-print">
+                        <img class="logo" src="./assets/bill_logo.png" alt="" srcset="">
+                        <h4 class="print-date d-print" x-text="date"></h4>
+                    </div>
                     <div class="card-header">
                         <input type="text" class="table-name" 
                             x-model="selectedTable.label"
@@ -102,13 +106,16 @@
                                 Imprimir tabla
                             </span>
                         </button>
-                        <button type="button" class="only-on-print  delete-table non-printable" @click="() => { open_modal('Eliminar tabla','¿Está seguro de que desea eliminar la tabla <b>{0}</b> ?',[selectedTable.label], 'delete') }">
+                        <button type="button" class="only-on-print delete-table non-printable" @click="() => { open_modal('Eliminar tabla','¿Está seguro de que desea eliminar la tabla <b>{0}</b> ?',[selectedTable.label], 'delete') }">
                             <i class="fa-solid fa-trash"></i>
                             <span class="desktop-visible">
                                 Eliminar tabla
                             </span>
                         </button>
-                        <h4 class="print-date d-print" x-text="date"></h4>
+                        <div class="print-total d-print">
+                            <h4 class="label">TOTAL:</h4>
+                            <h3 class="value" x-text="total"></h3>
+                        </div>
                     </div>
                     <template x-if="selectedTable.quantities.length === 0">
                         <div class="no-quantities-container non-printable">
@@ -119,7 +126,7 @@
                         </div>
                     </template>
                     <template x-if="selectedTable.quantities.length !== 0">
-                        <ul class="table" @click.outside="() => { unselect_all() }" id="printable-list">
+                        <ul class="table" @click.outside="() => { unselect_all() }">
                             <template x-for="(quantity, index) in selectedTable.quantities" :key="index">
                                 <li class="quantity" :key="index"
                                     @click.outside="() => { saveQuantity('unfocused', index, $el); }"
@@ -158,6 +165,12 @@
                             </template>                        
                         </ul>
                     </template>
+                    <div class="print-total-container d-print">
+                        <div class="print-total">
+                            <h4 class="label">TOTAL:</h4>
+                            <h3 class="value" x-text="total"></h3>
+                        </div>
+                    </div>
                 </div>
             </main>
         </template>

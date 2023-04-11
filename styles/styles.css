@@ -9,6 +9,9 @@
 }
 body {
     background-color: #E6E8EC;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+    -webkit-print-color-adjust: exact !important;
 }
 div.container {
     display: flex;
@@ -341,11 +344,7 @@ div.card.no-quantities {
     background-color: white;
     border-top: 1px solid #D9D9D9;
     border-bottom: 2px solid #D9D9D9;
-}
-.card-header h4.print-date {
-    font-weight: 600;
-    margin-block: auto;
-    margin-left: auto;
+    height: min-content;
 }
 .card-header input.table-name {
     border: 2px solid #e1e1e1;
@@ -463,7 +462,7 @@ ul.table li {
     height: 8px;
     background-color: #090909; */
 }
-ul.table li:not(:last-child){
+ul.table li {
     border-bottom: 1px solid #DFDFDF;
 }
 
@@ -556,8 +555,7 @@ div.table-sum div.info button.delete-items i {
     margin-right: 8px;
 }
 
-
-div.table-sum div.info span.error-label{
+div.table-sum div.info span.error-label {
     display: flex;
     margin-right: auto;
     margin-top: auto;
@@ -575,8 +573,13 @@ div.table-sum div.mobile-total {
 div.table-sum div.desktop-total {
     display: none;
 }
-
-div.table-sum div:is(.mobile-total, .desktop-total) h4.label {
+div.print-total-container {
+    padding-inline: 12px;
+}
+div.print-total-container div.print-total {
+    margin-left: auto;
+}
+div:is(.table-sum, .card-header, .print-total-container) div:is(.mobile-total, .desktop-total, .print-total) h4.label {
     font-size: 13px;
     font-weight: 600;
     color:#C9C9C9;
@@ -584,20 +587,19 @@ div.table-sum div:is(.mobile-total, .desktop-total) h4.label {
     text-align: right;
     margin-bottom: 3px;
 }
-div.table-sum div:is(.mobile-total, .desktop-total) h3.value {
+div:is(.table-sum, .card-header, .print-total-container) div:is(.mobile-total, .desktop-total, .print-total) h3.value {
     display: flex;
     justify-content: end;
     text-align: end;
     width: 100%;
     font-weight: 700;
     font-size: 26px;
+    line-height: 26px;
+    height: 26px;
     color: #090909;
+    margin-bottom: 0 !important;
 }
-/* .table-sum .total input.value:disabled {
-    opacity: 1; 
-    color: #090909;
-    -webkit-text-fill-color: #090909;
-} */
+
 .new-quantity {
     display: flex;
     justify-content: end;
@@ -633,7 +635,6 @@ div.table-sum div:is(.mobile-total, .desktop-total) h3.value {
     color: #090909;
     outline: none;
 }
-
 .new-quantity button {
     background-color: #090909;
     font-size: 15px;
@@ -642,7 +643,6 @@ div.table-sum div:is(.mobile-total, .desktop-total) h3.value {
 .new-quantity button:disabled {
     background-color: #656565;
 }
-
 .desktop-visible {
     display: none;
 }
@@ -739,11 +739,13 @@ div.table-sum div:is(.mobile-total, .desktop-total) h3.value {
         height: 45px;
     }
 }
-
 .d-none {
     display: none !important;
 }
 @media print {
+    * {
+        box-sizing: content-box;
+    }
     .non-printable {
         display: none !important;
     }
@@ -752,5 +754,74 @@ div.table-sum div:is(.mobile-total, .desktop-total) h3.value {
     }
     .d-none {
         display: none !important;
+    }
+    div.card {
+        justify-content: start;
+    }
+    div.card-header {
+        display: flex;
+        align-items: start;
+        align-content: start;
+        height: min-content;
+    }
+    div.print-header {
+        display: flex;
+        justify-content: space-between;
+        padding-inline: 12px;
+    }
+    div.print-header img.logo {
+        width: 100px;
+        height: 80px;
+    }
+    div.print-header h4.print-date {
+        font-weight: 600;
+        margin-block: auto;
+        margin-left: auto;
+    }
+    ul.table {
+        display: flex;
+        justify-content: space-between;
+        align-content: start;
+        align-items: start;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+        margin: 0 1px 1px 0 !important;
+        padding: 0 !important;
+    }
+    ul.table li.quantity {
+        padding-inline: 8px !important;
+        width: calc(50% - 17px); /* the width of the border-left divider*/
+        margin-block: 1px;
+        height: min-content;
+    }
+    
+    ul.table li.quantity:nth-child(even) {
+        border-right: 1px solid #ddd;
+    }
+    ul.table li.quantity input:is(.value, .name) {
+        font-size: 14px !important;
+    }
+    ul.table li input.value {
+        text-align: end;
+        padding-right: 8px;
+    }
+    div.card-header div.print-total {
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+        margin-left: auto;
+        padding-block: 0;
+    }
+    div.print-total h3.value {
+        height: 26px;
+        line-height: 26px;
+        margin-bottom: 0 !important;
+    }
+    div.print-total {
+        padding-block: 12px;
+    }
+    div.print-total :is(h4.label, h3.value){
+        margin-block: 0 !important;
     }
 }
