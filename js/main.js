@@ -414,6 +414,31 @@ document.addEventListener('alpine:init', () => {
         print(){
             printJS({ printable: 'printable-list', scanStyles: false, css: './styles/styles.css', type: 'html'})
         },
+        exportToExcel() {
+            const old_quantities = JSON.parse(JSON.stringify(this.selectedTable.quantities));
+            const data = old_quantities.map((obj) => {
+                Object.defineProperty(obj, 'nombre', Object.getOwnPropertyDescriptor(obj, 'name') );
+                Object.defineProperty(obj, 'valor', Object.getOwnPropertyDescriptor(obj, 'value') );
+                
+                delete obj['value'];
+                delete obj['name'];
+                return obj;
+            });
+            // const data = 
+            const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+            const EXCEL_EXTENSION = '.xlsx';
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = {
+                Sheets: {
+                    'data' : worksheet
+                },
+                SheetNames: ['data']
+            };
+            const excelBuffer = XLSX.write(workbook, {bookType: 'xlsx', type: 'array'});
+            
+            const data_ = new Blob([excelBuffer], {type: EXCEL_TYPE});
+            saveAs(data_, `InduCarg_${new Date().getTime()}` + EXCEL_EXTENSION);
+        },
         error: {
             visible: false,
             label: 'Haz superado el límite de items por lista.'

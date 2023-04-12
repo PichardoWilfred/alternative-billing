@@ -486,20 +486,8 @@ ul.table li.quantity.selected input.value {
 ul.table li.quantity:is(:hover, :active) input.value {
     border-color:#e1e1e1;
 }
-
 ul.table li.quantity div.select-indicator {
     margin-left: 16px;
-}
-
-ul.table li {
-    /* background-color: #0000000D; */
-    /* content: '';
-    position: absolute;
-    left: 24px;
-    border-radius: 3rem;
-    width: 8px;
-    height: 8px;
-    background-color: #090909; */
 }
 ul.table li {
     border-bottom: 1px solid #DFDFDF;
@@ -860,7 +848,7 @@ div:is(.table-sum, .card-header, .print-total-container) div:is(.mobile-total, .
     div.print-total {
         padding-block: 12px;
     }
-    div.print-total :is(h4.label, h3.value){
+    div.print-total :is(h4.label, h3.value) {
         margin-block: 0 !important;
     }
 }

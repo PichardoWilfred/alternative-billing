@@ -8,17 +8,19 @@
     <link rel="icon" type="image/x-icon" href="assets\icons\windows11\LargeTile.scale-100.png">
     <link rel="stylesheet" href="./styles/reset.css" />
     <link rel="stylesheet" href="./styles/overwritting.css" />
-    <link rel="stylesheet" href="./styles/commons.css" />
-    <link rel="stylesheet" href="./styles/styles.css"  />
+    <link rel="stylesheet" href="./styles/commons.css"/>
+    <link rel="stylesheet" href="./styles/styles.css" />
+    <script type="module" src="./js/main.js"></script>
     <link rel="manifest" href="./manifest.json" crossorigin="use-credentials"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://unpkg.com/minibarjs@latest/dist/minibar.min.css" rel="stylesheet" type="text/css">
     <script src="https://unpkg.com/minibarjs@latest/dist/minibar.min.js" type="text/javascript"></script>
-    <script type="module" src="./js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@ryangjchandler/alpine-mask@0.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
     <script defer src="https://printjs-4de6.kxcdn.com/print.min.css"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
+    <script src="./js/filesaver.js"></script>
 </head>
 <body>
     <div class="container" x-data="store">
@@ -117,6 +119,12 @@
                             <i class="fa-solid fa-print"></i>
                             <span class="desktop-visible">
                                 Imprimir tabla
+                            </span>
+                        </button>
+                        <button type="button" class="only-on-print print-table non-printable" @click="exportToExcel">
+                            <i class="fa-solid fa-file-excel"></i>
+                            <span class="desktop-visible">
+                                Exportar a excel
                             </span>
                         </button>
                         <button type="button" class="only-on-print delete-table non-printable" @click="() => { open_modal('Eliminar tabla','¿Está seguro de que desea eliminar la tabla <b>{0}</b> ?',[selectedTable.label], 'delete') }">
@@ -232,7 +240,5 @@
         </div>
     </div>
 </body>
-<style></style>
-<script type="module"></script>
 </html>
 
