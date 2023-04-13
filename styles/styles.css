@@ -866,6 +866,7 @@ div:is(.table-sum, .card-header, .print-total-container) div:is(.mobile-total, .
         display: flex;
         flex-direction: column;
         padding-block: 0;
+        background-color: white;
     }
     
     div.card-header div.print-total {
@@ -908,5 +909,7 @@ div:is(.table-sum, .card-header, .print-total-container) div:is(.mobile-total, .
         break-inside: avoid;
         page-break-inside: avoid;
     }
-
+    .table-sum {
+        background-color: white !important;
+    }
 }

@@ -137,11 +137,11 @@
                                 Eliminar tabla
                             </span>
                         </button>
-                        <div class="print-total-quantities d-print">
+                        <div class="print-total-quantities d-print" style="background-color: white;">
                             <h4 class="label">CAJAS:</h4>
                             <h3 class="value" x-text="items_total"></h3>
                         </div>
-                        <div class="print-total d-print">
+                        <div class="print-total d-print" style="background-color: white;">
                             <h4 class="label">TOTAL:</h4>
                             <h3 class="value" x-text="total"></h3>
                         </div>
@@ -165,6 +165,7 @@
                                     @mouseup="() => {cancel_select() }" @mouseleave="() => {cancel_select() }" 
                                     @touchend="() => {cancel_select() }"
                                     @click="toggle_select(index)">
+
                                     <span x-text="`Caja #${index+1}`" class="d-flex name justify-content-start text-start"></span>
 
                                     <input :id="`quantity-value-${index}`" class="value"
@@ -173,7 +174,7 @@
                                     x-model="quantity.value"
                                     @click="() => { focus_quantity(index, 'value') }"
                                     @keydown.enter.prevent="saveQuantity('enter', index, $el)"
-                                    @keydown="(e) => {validateQuantity(e)}"
+                                    @keydown="(e) => { validateQuantity(e) }"
                                     >
                                     <template x-if="select_mode">
                                         <div class="select-indicator">
@@ -208,7 +209,7 @@
                 <h4>No pudimos encontrar ninguna tabla en esta sesión.</h4>
             </main>
         </template>
-        <div class="table-sum">
+        <div class="table-sum" style="background-color: white;">
             <div class="info">
                 <template x-if="select_mode && !error.visible">
                     <button class="delete-items" @click="remove_selected_items()">
@@ -231,7 +232,7 @@
                 </div>
             </div>
             
-            <div class="desktop-total">
+            <div class="desktop-total" style="background-color: white;">
                 <h4 class="label">CAJA:</h4>
                 <h3 class="value" style="justify-content: start;" x-text="items_total"></h3>
             </div>

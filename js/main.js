@@ -182,7 +182,7 @@ document.addEventListener('alpine:init', () => {
                 this.selectedTable.editing.quantity = {index, input};
                 const input_ = document.querySelector(`#quantity-${input}-${index}`);
                 this.timeout.quantity = setTimeout(() => {
-                    input_.focus()   ;
+                    input_.focus();
                 }, 0);
             }, 0);
         },
