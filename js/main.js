@@ -144,18 +144,13 @@ document.addEventListener('alpine:init', () => {
             return this.selectedTable.quantities.filter((item) => item.value > 0).length;
         },
         get total() {
-            // const format = (value) => {
-            //     return (value).toLocaleString('en-US', {
-            //         style: 'currency', 
-            //         currency: 'USD'
-            //     });;
-            // }
             if (this.selectedTable.quantities.length < 1) {
                 return 0
             }
             let sum = 0;
             this.selectedTable.quantities.forEach((quantity) => {
-                sum += quantity.value * 1;
+                const value = quantity.value || 0;
+                sum += (value) * 1;
             });
             return sum;
         },
@@ -422,10 +417,10 @@ document.addEventListener('alpine:init', () => {
                 const { value } = this.selectedTable.quantities[index_];
                 if ( index_ < index ) { // getting all the values beneath himself
                     const value_ = value * 1;
-                    minus += (value_ > 0 && value) ? 0 : 1; // for each value that is invalid it will substract to said index.
+                    minus += (value_ > 0 && value) ? 0 : 1; // add 1, everytime we found an invalid (0 or null) value.
                 }
             }
-            return (index + 1) - minus;
+            return (index + 1) - minus;// the real index is the current, minus, the amount that was prevously added, meaning, minus all the invalid values before it.
         },
         print(){
             printJS({

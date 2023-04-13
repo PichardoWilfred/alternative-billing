@@ -219,8 +219,14 @@
                 <template x-if="error.visible">
                     <span x-text="error.label" class="error-label"></span>
                 </template>
+                <template x-if="!select_mode">
+                    <div class="mobile-total" style="margin-left: 0;">
+                        <h4 class="label">CAJAS</h4>
+                        <h3 class="value" x-text="items_total" style="justify-content: start;"></h3>
+                    </div>
+                </template>
                 <div class="mobile-total">
-                    <h4 class="label">TOTAL:</h4>
+                    <h4 class="label">TOTAL</h4>
                     <h3 class="value" x-text="total"></h3>
                 </div>
             </div>
