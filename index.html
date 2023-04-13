@@ -10,15 +10,19 @@
     <link rel="stylesheet" href="./styles/overwritting.css" />
     <link rel="stylesheet" href="./styles/commons.css"/>
     <link rel="stylesheet" href="./styles/styles.css" />
-    <script type="module" src="./js/main.js"></script>
+    
     <link rel="manifest" href="./manifest.json" crossorigin="use-credentials"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
     <link href="https://unpkg.com/minibarjs@latest/dist/minibar.min.css" rel="stylesheet" type="text/css">
     <script src="https://unpkg.com/minibarjs@latest/dist/minibar.min.js" type="text/javascript"></script>
+    
+    <script type="module" src="./js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@ryangjchandler/alpine-mask@0.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
     <script defer src="https://printjs-4de6.kxcdn.com/print.min.css"></script>
+    
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
     <script src="./js/filesaver.js"></script>
 </head>
@@ -133,6 +137,10 @@
                                 Eliminar tabla
                             </span>
                         </button>
+                        <div class="print-total-quantities d-print">
+                            <h4 class="label">CAJAS:</h4>
+                            <h3 class="value" x-text="items_total"></h3>
+                        </div>
                         <div class="print-total d-print">
                             <h4 class="label">TOTAL:</h4>
                             <h3 class="value" x-text="total"></h3>
@@ -147,23 +155,18 @@
                         </div>
                     </template>
                     <template x-if="selectedTable.quantities.length !== 0">
-                        <ul class="table" @click.outside="() => { unselect_all() }">
+                        <ul class="table" @click.outside="() => { unselect_all() }" id="table">
                             <template x-for="(quantity, index) in selectedTable.quantities" :key="index">
                                 <li class="quantity" :key="index"
+                                    :data-index="get_valid_index(`Caja #${index+1}`,index)"
                                     @click.outside="() => { saveQuantity('unfocused', index, $el); }"
-                                    :class="is_selected(index) && 'selected'"
+                                    :class="{'selected': is_selected(index), 'not-valid': (!quantity.value || quantity.value == 0)}"
                                     @mousedown="enable_select(index)" @touchstart="enable_select(index)"
                                     @mouseup="() => {cancel_select() }" @mouseleave="() => {cancel_select() }" 
                                     @touchend="() => {cancel_select() }"
                                     @click="toggle_select(index)">
+                                    <span x-text="`Caja #${index+1}`" class="d-flex name justify-content-start text-start"></span>
 
-                                    <input :id="`quantity-name-${index}`" class="name"
-                                    type="text"
-                                    x-model="quantity.name"
-                                    @click="() => { focus_quantity(index, 'name') }"
-                                    :disabled="select_mode"
-                                    @keydown.enter.prevent="saveQuantity('enter', index, $el)"
-                                    >
                                     <input :id="`quantity-value-${index}`" class="value"
                                     type="number"
                                     :disabled="select_mode"
@@ -187,7 +190,11 @@
                         </ul>
                     </template>
                     <div class="print-total-container d-print">
-                        <div class="print-total">
+                        <div class="print-total-quantities d-print">
+                            <h4 class="label">CAJAS:</h4>
+                            <h3 class="value" x-text="items_total"></h3>
+                        </div>
+                        <div class="print-total d-print">
                             <h4 class="label">TOTAL:</h4>
                             <h3 class="value" x-text="total"></h3>
                         </div>

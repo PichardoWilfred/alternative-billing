@@ -1,5 +1,6 @@
 // add a redo funcitonality
 // ádd the null systems logo on the nav.
+
 const default_tables = [ //default values
     {   id: 1, 
         label: 'Lista #1',
@@ -58,7 +59,8 @@ document.addEventListener('alpine:init', () => {
         popup: {
             visible: false
         },
-        get date(){
+        get date() {
+            const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
             const d = new Date();
             return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
         },
@@ -120,7 +122,7 @@ document.addEventListener('alpine:init', () => {
         },
         init() {
             this.$watch('search_active', (value) => {
-                if(!value) this.clear_search();
+                if (!value) this.clear_search();
             });
             if (selectedTable.id !== 0) return; //if there's not selectedTable on localstorage assign the first one 
             this.tables.map((table_, index) => {
@@ -138,7 +140,9 @@ document.addEventListener('alpine:init', () => {
             });
             this.unselect_all();
         },
-        
+        get items_total() {
+            return this.selectedTable.quantities.filter((item) => item.value > 0).length;
+        },
         get total() {
             // const format = (value) => {
             //     return (value).toLocaleString('en-US', {
@@ -411,8 +415,27 @@ document.addEventListener('alpine:init', () => {
             this.updateTable({type: 'remove_quantities', quantities});
             this.unselect_all();
         },
+        get_valid_index(text, index){
+            // index = index + 1;
+            let minus = 0;
+            for (let index_ = 0; index_ < this.selectedTable.quantities.length; index_++) {
+                const { value } = this.selectedTable.quantities[index_];
+                if ( index_ < index ) { // getting all the values beneath himself
+                    const value_ = value * 1;
+                    minus += (value_ > 0 && value) ? 0 : 1; // for each value that is invalid it will substract to said index.
+                }
+            }
+            return (index + 1) - minus;
+        },
         print(){
-            printJS({ printable: 'printable-list', scanStyles: false, css: './styles/styles.css', type: 'html'})
+            printJS({
+                printable: 'printable-list', 
+                scanStyles: false, 
+                css: './styles/styles.css', 
+                type: 'html', 
+                documentTitle:'InduCarg', 
+                repeatTableHeader: false,
+            })
         },
         exportToExcel() {
             const old_quantities = JSON.parse(JSON.stringify(this.selectedTable.quantities));
@@ -424,7 +447,6 @@ document.addEventListener('alpine:init', () => {
                 delete obj['name'];
                 return obj;
             });
-            // const data = 
             const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
             const EXCEL_EXTENSION = '.xlsx';
             const worksheet = XLSX.utils.json_to_sheet(data);
@@ -504,7 +526,7 @@ document.addEventListener('alpine:init', () => {
 })
 
 
-const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+ //hetting our date
 let prompt_event;
 window.addEventListener('appinstalled', () => {
     // Esconder la promoción de instalación de la PWA
@@ -528,3 +550,6 @@ window.addEventListener("beforeinstallprompt", (e) => {
     prompt_event = e;
     // Update UI to notify the user they can add to home screen
 });
+document.addEventListener('alpine:initialized', () => {
+    // new MiniBar(document.querySelector('ul.table'));
+})

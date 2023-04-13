@@ -9,8 +9,8 @@
 }
 body {
     background-color: #E6E8EC;
-    -webkit-print-color-adjust:exact !important;
-    print-color-adjust:exact !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
     -webkit-print-color-adjust: exact !important;
 }
 div.container {
@@ -310,11 +310,11 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
     -moz-appearance: textfield;
 }
-input:is(.name, .value)::placeholder {
+input.value::placeholder {
     color: #c7c7c7;
     font-weight: 500;
 }
-input:is(.name, .value):focus {
+input.value:focus {
     outline: none;
     border-color: rgb(150, 150, 150);
 }
@@ -476,6 +476,10 @@ ul.table li.quantity {
     cursor: pointer;
     transition: background-color 0.1s ease-in-out;
 }
+
+ul.table li.quantity.not-valid input.value {
+    opacity: 0.35 !important;
+}
 ul.table li.quantity:is(:hover, :active, .selected) {
     background-color: #eee;
 }
@@ -497,7 +501,7 @@ ul.table li span {
     font-weight: 600;
     font-size: 20px;
 }
-ul.table li input:is(.value, .name) {
+ul.table li input.value {
     display: flex;
     text-align: start;
     
@@ -515,15 +519,16 @@ ul.table li input:is(.value, .name) {
     cursor: pointer;
     transition: all 0.15s ease-in-out;
 }
-ul.table li input.name {
-    width: 70%;
+ul.table li span.name {
+    font-size: 16px;
+    color: #4A4A4A;
 }
 ul.table li input.value {
     width: 30%;
     border: 2px solid #F4F4F4;
     background-color: #F4F4F4;
 }
-ul.table li input:is(.value, .name):disabled {
+ul.table li:not(.not-valid) input.value:disabled {
     opacity: 1; /* required on iOS */
     color: #090909;
     -webkit-text-fill-color: #090909;
@@ -573,6 +578,7 @@ div.table-sum div.info button.delete-items {
     background-color: transparent;
     border: 3px solid #E92222;
     color: #E92222;
+    font-size: 14px;
     font-weight: 600;
 }
 div.table-sum div.info button.delete-items:hover {
@@ -600,13 +606,15 @@ div.table-sum div.mobile-total {
 div.table-sum div.desktop-total {
     display: none;
 }
-div.print-total-container {
+div.print-total-container { /*not on the header*/
     padding-inline: 12px;
+    display: flex;
+    justify-content: space-between;
 }
 div.print-total-container div.print-total {
     margin-left: auto;
 }
-div:is(.table-sum, .card-header, .print-total-container) div:is(.mobile-total, .desktop-total, .print-total) h4.label {
+div:is(.table-sum, .card-header, .print-total-container) div:is(.mobile-total, .desktop-total, .print-total, .print-total-quantities) h4.label {
     font-size: 13px;
     font-weight: 600;
     color:#C9C9C9;
@@ -614,7 +622,7 @@ div:is(.table-sum, .card-header, .print-total-container) div:is(.mobile-total, .
     text-align: right;
     margin-bottom: 3px;
 }
-div:is(.table-sum, .card-header, .print-total-container) div:is(.mobile-total, .desktop-total, .print-total) h3.value {
+div:is(.table-sum, .card-header, .print-total-container) div:is(.mobile-total, .desktop-total, .print-total, .print-total-quantities) h3.value {
     display: flex;
     justify-content: end;
     text-align: end;
@@ -783,13 +791,17 @@ div:is(.table-sum, .card-header, .print-total-container) div:is(.mobile-total, .
         display: none !important;
     }
     div.card {
+        display: flex;
+        flex-direction: column;
         justify-content: start;
+
     }
     div.card-header {
         display: flex;
         align-items: start;
         align-content: start;
         height: min-content;
+        margin-bottom: 0 !important;
     }
     div.print-header {
         display: flex;
@@ -806,49 +818,97 @@ div:is(.table-sum, .card-header, .print-total-container) div:is(.mobile-total, .
         margin-left: auto;
     }
     ul.table {
+        overflow-y: unset;
         display: flex;
-        justify-content: space-between;
+        justify-content: start;
         align-content: start;
         align-items: start;
         flex-direction: row;
         flex-wrap: wrap;
+
         width: 100%;
-        margin: 0 1px 1px 0 !important;
+        margin-inline: 1px !important;
         padding: 0 !important;
+        margin-top: 0 !important;
     }
     ul.table li.quantity {
-        padding-inline: 8px !important;
-        width: calc(50% - 17px); /* the width of the border-left divider*/
-        margin-block: 1px;
+        align-content: center;
+        flex-shrink: 0;
+        padding: 1px 5px !important;
+        width: calc(16.5% - 12px); /* the width of the border-left divider + padding-inline total*/
+        margin: 1px;
         height: min-content;
-    }
-    
-    ul.table li.quantity:nth-child(even) {
+
         border-right: 1px solid #ddd;
     }
-    ul.table li.quantity input:is(.value, .name) {
-        font-size: 14px !important;
+    
+    ul.table li.quantity :is(input.value, span.name) {
+        font-size: 10px !important;
+    }
+    ul.table li.quantity.not-valid {
+        display: none !important;
+    }
+    ul.table li.quantity::before {
+        content: 'Caja #'attr(data-index);
+        font-weight: 600;
+        color: #4A4A4A;
+        font-size: 10px;
+    }
+    ul.table li.quantity span.name {
+        display: none !important;
     }
     ul.table li input.value {
+        border-radius: 2px;
+        background-color: transparent;
+        width: 35px;
         text-align: end;
-        padding-right: 8px;
+        padding-inline: 4px;
     }
-    div.card-header div.print-total {
+    div.card-header div:is(.print-total, .print-total-quantities) {
         display: flex;
         flex-direction: column;
-        align-items: end;
-        margin-left: auto;
         padding-block: 0;
     }
-    div.print-total h3.value {
+    
+    div.card-header div.print-total {
+        margin-left: auto;
+    }
+    div.card-header div.print-total-quantities {
+        margin-left: 12px;
+        text-align: right !important;
+        align-items: start !important;
+        align-content: start !important; 
+    }
+    
+    div:is(.print-total, .print-total-quantities) h4.label {
+        margin-top: 0 !important;
+    }
+    div:is(.print-total, .print-total-quantities) h3.value {
         height: 26px;
         line-height: 26px;
-        margin-bottom: 0 !important;
+        margin-block: 0;
     }
-    div.print-total {
+
+    div.print-total-quantities > h3.value {
+        justify-content: start !important;  /* text-align-=issues */
+    }
+
+    div.print-total-container div.print-total {
         padding-block: 12px;
     }
+    /* print config */
     div.print-total :is(h4.label, h3.value) {
+        break-inside: avoid;
+        page-break-inside: avoid;
         margin-block: 0 !important;
     }
+    div.print-total-container {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+    ul.table li.quantity, div.print-total {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
 }
