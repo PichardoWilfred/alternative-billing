@@ -230,22 +230,25 @@
                     <h3 class="value" x-text="total"></h3>
                 </div>
             </div>
+            
+            <div class="desktop-total">
+                <h4 class="label">CAJA:</h4>
+                <h3 class="value" style="justify-content: start;" x-text="items_total"></h3>
+            </div>
+
             <div class="new-quantity non-printable" :class="tables.length === 0 && 'disabled'">
-                <input
-                type="number"
-                pattern="[1-9]"
-                x-ref="new_quantity"
-                x-model="new_quantity"
-                @click="() => { focus_newQuantity() }"
-                @keydown="(e) => {validateQuantity(e)}"
+                <input type="number" pattern="[1-9]" x-ref="new_quantity"
+                x-model="new_quantity" @click="() => { focus_newQuantity() }"
+                @keydown="(e) => { validateQuantity(e) }"
                 @keydown.enter.prevent="saveNewQuantity($el)">
                 <button type="button" @click="() => { saveNewQuantity($refs.new_quantity) }">
                     <i class="fa-solid fa-paper-plane"></i>
                     <span class="desktop-visible">
                         Agregar item
-                    </span
+                    </span>
                 </button>
             </div>
+
             <div class="desktop-total">
                 <h4 class="label">TOTAL:</h4>
                 <h3 class="value" x-text="total"></h3>

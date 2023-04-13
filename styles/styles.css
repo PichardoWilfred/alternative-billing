@@ -252,7 +252,7 @@ nav.main .popup-container ul.pop-up li:hover {
     color: #090909;
 }
 nav.main .popup-container ul.pop-up li:not(:last-child){
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #C1C1C1;
 }
 nav.main .popup-container ul.pop-up li span {
     font-weight: 600;
@@ -494,7 +494,7 @@ ul.table li.quantity div.select-indicator {
     margin-left: 16px;
 }
 ul.table li {
-    border-bottom: 1px solid #DFDFDF;
+    border-bottom: 1px solid #C1C1C1
 }
 
 ul.table li span {
@@ -735,7 +735,7 @@ div:is(.table-sum, .card-header, .print-total-container) div:is(.mobile-total, .
     ul.table li.quantity {
         width: 33.33%;
         height: max-content;
-        border-right: 1px solid #ddd;
+        border-right: 1px solid #C1C1C1;
     }
     div.table-sum {
         display: flex;
@@ -818,8 +818,8 @@ div:is(.table-sum, .card-header, .print-total-container) div:is(.mobile-total, .
         margin-left: auto;
     }
     ul.table {
-        overflow-y: unset;
         display: flex;
+        overflow-y: unset;
         justify-content: start;
         align-content: start;
         align-items: start;
@@ -835,11 +835,9 @@ div:is(.table-sum, .card-header, .print-total-container) div:is(.mobile-total, .
         align-content: center;
         flex-shrink: 0;
         padding: 1px 5px !important;
-        width: calc(16.5% - 12px); /* the width of the border-left divider + padding-inline total*/
-        margin: 1px;
+        width: calc(16.65% - 12px); /* the width of the border-left divider + padding-inline total*/
         height: min-content;
-
-        border-right: 1px solid #ddd;
+        border-right: 2px solid #C1C1C1;
     }
     
     ul.table li.quantity :is(input.value, span.name) {
